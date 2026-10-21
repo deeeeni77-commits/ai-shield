@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>راهکارهای امنیت سایبری</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .solutions-page {
+            min-height: 100vh;
+            padding: 110px 7% 80px;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(0, 200, 255, 0.08), transparent 30%),
+                radial-gradient(circle at 85% 75%, rgba(0, 120, 255, 0.08), transparent 30%);
+        }
+
+        .solutions-header {
+            text-align: center;
+            max-width: 750px;
+            margin: 0 auto 55px;
+        }
+
+        .solutions-label {
+            display: inline-block;
+            color: #55ddff;
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        .solutions-header h1 {
+            margin: 0 0 15px;
+            font-size: clamp(32px, 5vw, 58px);
+        }
+
+        .solutions-header p {
+            color: #9daab8;
+            line-height: 2;
+            font-size: 14px;
+        }
+
+
+        /* PATH */
+
+        .solution-path {
+            max-width: 1050px;
+            margin: 0 auto 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .path-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 125px;
+        }
+
+        .path-circle {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: 1px solid rgba(80, 215, 255, 0.35);
+            background: rgba(8, 20, 34, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5de0ff;
+            font-size: 19px;
+            box-shadow: 0 0 25px rgba(0, 190, 255, 0.08);
+            z-index: 2;
+        }
+
+        .path-item span {
+            margin-top: 12px;
+            color: #9eabb7;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .path-line {
+            width: 55px;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                rgba(70, 210, 255, 0.05),
+                rgba(70, 210, 255, 0.35),
+                rgba(70, 210, 255, 0.05)
+            );
+            margin-bottom: 28px;
+        }
+
+
+        /* SOLUTION CARDS */
+
+        .solutions-list {
+            max-width: 950px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .solution-item {
+            border: 1px solid rgba(255,255,255,0.07);
+            background: rgba(8, 17, 30, 0.75);
+            border-radius: 17px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .solution-item:hover {
+            border-color: rgba(80, 215, 255, 0.18);
+        }
+
+        .solution-item.open {
+            border-color: rgba(80, 215, 255, 0.28);
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.05);
+        }
+
+        .solution-button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #eefaff;
+            cursor: pointer;
+            padding: 20px 23px;
+            display: flex;
+            align-items: center;
+            gap: 17px;
+            text-align: right;
+            font-family: inherit;
+        }
+
+        .solution-number {
+            width: 39px;
+            height: 39px;
+            flex-shrink: 0;
+            border-radius: 11px;
+            background: rgba(65, 205, 255, 0.07);
+            border: 1px solid rgba(65, 205, 255, 0.15);
+            color: #5de0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .solution-info {
+            flex: 1;
+        }
+
+        .solution-info strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .solution-info small {
+            color: #617383;
+            font-size: 10px;
+            letter-spacing: 1px;
+            direction: ltr;
+            display: block;
+        }
+
+        .solution-plus {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #7d8c9a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .solution-item.open .solution-plus {
+            transform: rotate(45deg);
+            color: #5de0ff;
+            border-color: rgba(80, 215, 255, 0.25);
+        }
+
+        .solution-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s ease;
+        }
+
+        .solution-content-inner {
+            padding: 0 23px 23px 79px;
+            color: #96a5b2;
+            font-size: 13px;
+            line-height: 2.1;
+        }
+
+        .solution-content-inner p {
+            margin: 0;
+        }
+
+        .solution-content-inner ul {
+            margin: 12px 0 0;
+            padding-right: 18px;
+        }
+
+        .solution-content-inner li {
+            margin-bottom: 7px;
+        }
+
+
+        /* AI BOX */
+
+        .ai-solution-box {
+            max-width: 950px;
+            margin: 55px auto 0;
+            padding: 28px;
+            border-radius: 20px;
+            border: 1px solid rgba(80, 215, 255, 0.14);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(50, 200, 255, 0.06),
+                    rgba(255,255,255,0.015)
+                );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-solution-box::before {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(60, 210, 255, 0.07);
+            filter: blur(60px);
+            left: -70px;
+            bottom: -80px;
+        }
+
+        .ai-box-label {
+            color: #5de0ff;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .ai-solution-box h2 {
+            font-size: 20px;
+            margin: 0 0 10px;
+        }
+
+        .ai-solution-box p {
+            color: #96a5b2;
+            font-size: 13px;
+            line-height: 2;
+            margin: 0;
+        }
+
+
+        @media (max-width: 800px) {
+
+            .solutions-page {
+                padding: 90px 5% 60px;
+            }
+
+            .solution-path {
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 5px 10px 15px;
+            }
+
+            .path-item {
+                min-width: 110px;
+            }
+
+            .path-line {
+                width: 30px;
+            }
+
+            .solution-content-inner {
+                padding: 0 20px 20px 20px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <main class="solutions-page">
+
+
+        <!-- HEADER -->
+
+        <section class="solutions-header">
+
+            <span class="solutions-label">
+                CYBERSECURITY SOLUTIONS
+            </span>
+
+            <h1>
+                راهکارهای مقابله با تهدیدات
+            </h1>
+
+            <p>
+                مقابله با تهدیدات سایبری فقط به شناسایی حمله محدود نمی‌شود؛
+                از شناخت ریسک و پیشگیری تا تشخیص، پاسخ و بازیابی،
+                مجموعه‌ای از اقدامات در کنار یکدیگر امنیت را تقویت می‌کنند.
+            </p>
+
+        </section>
+
+
+
+        <!-- PATH -->
+
+        <div class="solution-path">
+
+            <div class="path-item">
+                <div class="path-circle">01</div>
+                <span>شناسایی</span>
+            </div>
+
+            <div class="path-line"></div>
+
+            <div class="path-item">
+                <div class="path-circle">02</div>
+                <span>پیشگیری</span>
+            </div>
+
+            <div class="path-line"></div>
+
+            <div class="path-item">
+                <div class="path-circle">03</div>
+                <span>تشخیص</span>
+            </div>
+
+            <div class="path-line"></div>
+
+            <div class="path-item">
+                <div class="path-circle">04</div>
+                <span>پاسخ</span>
+            </div>
+
+            <div class="path-line"></div>
+
+            <div class="path-item">
+                <div class="path-circle">05</div>
+                <span>بازیابی</span>
+            </div>
+
+            <div class="path-line"></div>
+
+            <div class="path-item">
+                <div class="path-circle">06</div>
+                <span>بهبود</span>
+            </div>
+
+        </div>
+
+
+
+        <!-- SOLUTIONS -->
+
+        <section class="solutions-list">
+
+
+            <!-- 01 -->
+
+            <article class="solution-item">
+
+                <button class="solution-button">
+
+                    <span class="solution-number">01</span>
+
+                    <span class="solution-info">
+                        <strong>شناسایی ریسک‌ها و دارایی‌ها</strong>
+                        <small>IDENTIFY RISKS</small>
+                    </span>
+
+                    <span class="solution-plus">+</span>
+
+                </button>
+
+                <div class="solution-content">
+
+                    <div class="solution-content-inner">
+
+                        <p>
+                            قبل از مقابله با تهدید، باید سیستم‌ها، داده‌ها،
+                            سرویس‌های مهم و نقاط آسیب‌پذیر شناسایی شوند.
+                            این کار کمک می‌کند ریسک‌های مهم‌تر در اولویت قرار بگیرند.
+                        </p>
+
+                        <ul>
+                            <li>شناسایی دارایی‌ها و داده‌های حساس</li>
+                            <li>بررسی آسیب‌پذیری‌ها و ریسک‌های احتمالی</li>
+                            <li>اولویت‌بندی ریسک‌ها</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- 02 -->
+
+            <article class="solution-item">
+
+                <button class="solution-button">
+
+                    <span class="solution-number">02</span>
+
+                    <span class="solution-info">
+                        <strong>محافظت و پیشگیری</strong>
+                        <small>PROTECT & PREVENT</small>
+                    </span>
+
+                    <span class="solution-plus">+</span>
+
+                </button>
+
+                <div class="solution-content">
+
+                    <div class="solution-content-inner">
+
+                        <p>
+                            بسیاری از تهدیدها را می‌توان با ایجاد لایه‌های
+                            حفاظتی مناسب و کاهش نقاط ضعف، قبل از وقوع یا گسترش
+                            آن‌ها کنترل کرد.
+                        </p>
+
+                        <ul>
+                            <li>کنترل دسترسی کاربران</li>
+                            <li>احراز هویت مناسب</li>
+                            <li>به‌روزرسانی و وصله‌کردن سیستم‌ها</li>
+                            <li>تهیه نسخه پشتیبان از داده‌های مهم</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- 03 -->
+
+            <article class="solution-item">
+
+                <button class="solution-button">
+
+                    <span class="solution-number">03</span>
+
+                    <span class="solution-info">
+                        <strong>تشخیص هوشمند تهدیدات</strong>
+                        <small>AI THREAT DETECTION</small>
+                    </span>
+
+                    <span class="solution-plus">+</span>
+
+                </button>
+
+                <div class="solution-content">
+
+                    <div class="solution-content-inner">
+
+                        <p>
+                            هوش مصنوعی می‌تواند حجم زیادی از داده‌ها و رویدادهای
+                            امنیتی را تحلیل کرده و الگوهای غیرعادی را شناسایی کند.
+                            روش‌هایی مانند یادگیری ماشین، یادگیری عمیق و تشخیص
+                            ناهنجاری می‌توانند در این مرحله استفاده شوند.
+                        </p>
+
+                        <ul>
+                            <li>تحلیل لاگ‌ها و رویدادهای امنیتی</li>
+                            <li>تشخیص رفتارهای غیرعادی</li>
+                            <li>امتیازدهی به سطح ریسک</li>
+                            <li>اولویت‌بندی هشدارها</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- 04 -->
+
+            <article class="solution-item">
+
+                <button class="solution-button">
+
+                    <span class="solution-number">04</span>
+
+                    <span class="solution-info">
+                        <strong>پاسخ سریع به حادثه</strong>
+                        <small>RESPOND</small>
+                    </span>
+
+                    <span class="solution-plus">+</span>
+
+                </button>
+
+                <div class="solution-content">
+
+                    <div class="solution-content-inner">
+
+                        <p>
+                            پس از شناسایی یک تهدید، واکنش سریع می‌تواند از
+                            گسترش آن و افزایش خسارت جلوگیری کند. هشدارهای
+                            اولویت‌بندی‌شده به تیم امنیتی کمک می‌کنند سریع‌تر
+                            روی موارد مهم تمرکز کنند.
+                        </p>
+
+                        <ul>
+                            <li>بررسی و اعتبارسنجی هشدار</li>
+                            <li>محدود کردن اثر حادثه</li>
+                            <li>جلوگیری از گسترش تهدید</li>
+                            <li>تحلیل شواهد و علت حادثه</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- 05 -->
+
+            <article class="solution-item">
+
+                <button class="solution-button">
+
+                    <span class="solution-number">05</span>
+
+                    <span class="solution-info">
+                        <strong>بازیابی سیستم‌ها</strong>
+                        <small>RECOVER</small>
+                    </span>
+
+                    <span class="solution-plus">+</span>
+
+                </button>
+
+                <div class="solution-content">
+
+                    <div class="solution-content-inner">
+
+                        <p>
+                            بعد از یک حادثه امنیتی، سیستم‌ها و سرویس‌های
+                            آسیب‌دیده باید به وضعیت قابل استفاده بازگردند.
+                            نسخه‌های پشتیبان و برنامه بازیابی می‌توانند
+                            در این مرحله نقش مهمی داشته باشند.
+                        </p>
+
+                        <ul>
+                            <li>بازگردانی سرویس‌های آسیب‌دیده</li>
+                            <li>استفاده از نسخه‌های پشتیبان</li>
+                            <li>بررسی وضعیت سیستم پس از حادثه</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- 06 -->
+
+            <article class="solution-item">
+
+                <button class="solution-button">
+
+                    <span class="solution-number">06</span>
+
+                    <span class="solution-info">
+                        <strong>بهبود مستمر سیستم امنیتی</strong>
+                        <small>CONTINUOUS IMPROVEMENT</small>
+                    </span>
+
+                    <span class="solution-plus">+</span>
+
+                </button>
+
+                <div class="solution-content">
+
+                    <div class="solution-content-inner">
+
+                        <p>
+                            تهدیدات سایبری دائماً تغییر می‌کنند؛ بنابراین
+                            سیستم تشخیص نیز باید با داده‌ها و تجربه‌های جدید
+                            بهبود پیدا کند. بررسی نتایج و بازخوردها می‌تواند
+                            به کاهش خطاهای تشخیص کمک کند.
+                        </p>
+
+                        <ul>
+                            <li>بررسی نتایج تشخیص</li>
+                            <li>استفاده از بازخوردهای امنیتی</li>
+                            <li>به‌روزرسانی داده‌ها و مدل‌ها</li>
+                            <li>کاهش هشدارهای اشتباه</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- AI BOX -->
+
+        <section class="ai-solution-box">
+
+            <span class="ai-box-label">
+                AI + CYBERSECURITY
+            </span>
+
+            <h2>
+                نقش هوش مصنوعی در این چرخه چیست؟
+            </h2>
+
+            <p>
+                هوش مصنوعی بیشتر در بخش تشخیص و تحلیل به کار می‌رود؛
+                با تحلیل داده‌های امنیتی، شناسایی ناهنجاری‌ها و کمک به
+                اولویت‌بندی هشدارها می‌تواند سرعت و دقت بررسی تهدیدات را
+                افزایش دهد. با این حال، کیفیت داده‌های آموزشی، تغییر
+                الگوهای حمله و وجود هشدارهای اشتباه همچنان از چالش‌های مهم هستند.
+            </p>
+
+        </section>
+
+
+    </main>
+
+
+
+    <script>
+
+        const solutionItems =
+            document.querySelectorAll(".solution-item");
+
+        solutionItems.forEach(item => {
+
+            const button =
+                item.querySelector(".solution-button");
+
+            const content =
+                item.querySelector(".solution-content");
+
+            button.addEventListener("click", () => {
+
+                solutionItems.forEach(otherItem => {
+
+                    if (otherItem !== item) {
+
+                        otherItem.classList.remove("open");
+
+                        const otherContent =
+                            otherItem.querySelector(".solution-content");
+
+                        otherContent.style.maxHeight = null;
+                    }
+
+                });
+
+
+                item.classList.toggle("open");
+
+
+                if (item.classList.contains("open")) {
+
+                    content.style.maxHeight =
+                        content.scrollHeight + "px";
+
+                } else {
+
+                    content.style.maxHeight = null;
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
