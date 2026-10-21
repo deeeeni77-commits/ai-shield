@@ -1,0 +1,1138 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد امنیتی | AI Shield</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #07111f;
+            --panel: #0d1b2d;
+            --panel2: #101f33;
+            --border: #1d3047;
+            --text: #e8f1fc;
+            --muted: #8295ad;
+            --cyan: #36d9f5;
+            --blue: #4b8dff;
+            --green: #36d6a0;
+            --yellow: #f6c65b;
+            --red: #ff657c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Vazirmatn", sans-serif;
+            background:
+                radial-gradient(ellipse at 85% 0%, #102d4b 0%, transparent 38%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            flex-shrink: 0;
+            background: rgba(8, 19, 33, .94);
+            border-left: 1px solid var(--border);
+            padding: 28px 17px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #1d8cff, #28d9e8);
+            color: #061322;
+            font-size: 23px;
+            font-weight: 800;
+            box-shadow: 0 0 25px #20c9f52b;
+        }
+
+        .brand h2 {
+            font-size: 17px;
+            letter-spacing: 1px;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        .menu-title {
+            margin: 27px 10px 12px;
+            color: #627991;
+            font-size: 11px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #a8b9ce;
+            text-decoration: none;
+            padding: 12px 13px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            color: var(--cyan);
+            background: #12314a;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            margin-top: 38px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #0c1929;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            margin-left: 7px;
+            box-shadow: 0 0 10px #36d6a077;
+        }
+
+        .sidebar-bottom p {
+            font-size: 12px;
+        }
+
+        .sidebar-bottom small {
+            color: var(--muted);
+            display: block;
+            margin-top: 8px;
+            font-size: 10px;
+            direction: ltr;
+            text-align: right;
+        }
+
+        main {
+            min-width: 0;
+            flex: 1;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            color: var(--cyan);
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: clamp(22px, 3vw, 30px);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .live-label {
+            font-size: 11px;
+            color: var(--green);
+            border: 1px solid #245343;
+            background: #0b2a27;
+            border-radius: 8px;
+            padding: 9px 12px;
+        }
+
+        .btn {
+            border: 1px solid var(--border);
+            background: var(--panel2);
+            color: var(--text);
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-size: 12px;
+            transition: .2s;
+        }
+
+        .btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #167eea, #19b9d6);
+            border: 0;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 23px;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, var(--panel2), var(--panel));
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 21px;
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            width: 85px;
+            height: 85px;
+            left: -28px;
+            bottom: -35px;
+            border-radius: 50%;
+            background: var(--glow, #36d9f5);
+            opacity: .07;
+            filter: blur(10px);
+        }
+
+        .stat-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #a4b6cb;
+        }
+
+        .stat-icon {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            color: var(--glow);
+            background: color-mix(in srgb, var(--glow) 12%, transparent);
+            font-size: 20px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 18px;
+            direction: ltr;
+            text-align: right;
+        }
+
+        .stat-foot {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(250px, .8fr);
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .panel {
+            min-width: 0;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: rgba(13, 27, 45, .9);
+            padding: 22px;
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 23px;
+        }
+
+        .panel-heading h2 {
+            font-size: 15px;
+        }
+
+        .panel-heading p {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        .mini-tag {
+            font-size: 10px;
+            color: var(--cyan);
+            background: #103044;
+            border-radius: 6px;
+            padding: 6px 9px;
+            white-space: nowrap;
+        }
+
+        .risk-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .risk-row {
+            display: grid;
+            grid-template-columns: 70px 1fr 35px;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .risk-row .risk-name {
+            color: #aebed0;
+        }
+
+        .track {
+            height: 7px;
+            border-radius: 20px;
+            background: #1a2a3d;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            width: 0;
+            border-radius: 20px;
+            transition: width .5s;
+        }
+
+        .risk-value {
+            text-align: left;
+            direction: ltr;
+            font-size: 12px;
+        }
+
+        .insight {
+            border: 1px solid #254459;
+            border-radius: 12px;
+            padding: 15px;
+            background: #0c2234;
+            margin-bottom: 12px;
+        }
+
+        .insight h3 {
+            color: var(--cyan);
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .insight p {
+            font-size: 11px;
+            line-height: 2;
+            color: #9fb2c8;
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.9;
+        }
+
+        .table-panel {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .table-top {
+            padding: 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filters {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .filters input,
+        .filters select {
+            min-width: 150px;
+            flex: 1;
+            border: 1px solid var(--border);
+            background: #091727;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 8px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .filters input:focus,
+        .filters select:focus {
+            border-color: var(--cyan);
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        th {
+            background: #0b192a;
+            color: #849ab3;
+            font-weight: 500;
+            text-align: right;
+            padding: 15px 18px;
+        }
+
+        td {
+            padding: 16px 18px;
+            border-top: 1px solid #1a2a3c;
+            color: #c4d2e2;
+        }
+
+        tbody tr:hover {
+            background: #102137;
+        }
+
+        .ip {
+            direction: ltr;
+            text-align: right;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .severity {
+            display: inline-block;
+            border-radius: 6px;
+            padding: 5px 9px;
+            font-size: 10px;
+        }
+
+        .severity.critical {
+            background: #461e2b;
+            color: #ff8093;
+        }
+
+        .severity.high {
+            background: #432b1d;
+            color: #ffb46f;
+        }
+
+        .severity.medium {
+            background: #42391b;
+            color: #f6d46e;
+        }
+
+        .severity.low {
+            background: #15372f;
+            color: #6ce0b4;
+        }
+
+        .score {
+            font-weight: 700;
+            direction: ltr;
+        }
+
+        .score.high {
+            color: var(--red);
+        }
+
+        .score.medium {
+            color: var(--yellow);
+        }
+
+        .score.low {
+            color: var(--green);
+        }
+
+        .empty {
+            padding: 36px 15px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #617790;
+            font-size: 10px;
+            padding: 20px 2px;
+        }
+
+        .message {
+            display: none;
+            border: 1px solid #733344;
+            color: #ff9cab;
+            background: #2c1420;
+            padding: 13px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            line-height: 1.9;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        @media (max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 16px;
+                border-left: 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .brand {
+                padding-bottom: 14px;
+            }
+
+            .menu-title,
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                padding-top: 12px;
+            }
+
+            .nav-link {
+                white-space: nowrap;
+                margin: 0;
+                padding: 9px 11px;
+            }
+
+            main {
+                padding: 20px 14px;
+            }
+
+            .stats {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 26px;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+
+            .table-panel {
+                padding: 0;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">A</div>
+            <div>
+                <h2>AI SHIELD</h2>
+                <p>SECURITY CENTER</p>
+            </div>
+        </div>
+
+        <div class="menu-title">مدیریت امنیت</div>
+
+        <nav class="nav-links">
+            <a class="nav-link active" href="dashboard.html">
+                <span class="nav-icon">▦</span>
+                داشبورد
+            </a>
+            <a class="nav-link" href="demo.html">
+                <span class="nav-icon">⌁</span>
+                تحلیل تهدید
+            </a>
+            <a class="nav-link" href="detection.html">
+                <span class="nav-icon">◈</span>
+                انواع تهدید
+            </a>
+            <a class="nav-link" href="solutions.html">
+                <span class="nav-icon">⌘</span>
+                راهکارها
+            </a>
+            <a class="nav-link" href="index.html">
+                <span class="nav-icon">⌂</span>
+                صفحه اصلی
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p><span class="status-dot"></span>وضعیت پنل</p>
+            <small id="sidebarStatus">CHECKING API...</small>
+        </div>
+    </aside>
+
+    <main>
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">SECURITY OPERATIONS CENTER</p>
+                <h1>داشبورد امنیتی</h1>
+                <p class="subtitle">نمای کلی هشدارها و وضعیت تهدیدهای ثبت‌شده</p>
+            </div>
+
+            <div class="top-actions">
+                <span class="live-label" id="connectionStatus">● در حال اتصال</span>
+                <button class="btn primary" id="refreshBtn" onclick="loadDashboard()">
+                    ↻ به‌روزرسانی
+                </button>
+            </div>
+        </header>
+
+        <div class="message" id="errorMessage"></div>
+
+        <section class="stats">
+            <article class="stat-card" style="--glow:var(--cyan)">
+                <div class="stat-head">
+                    <span class="stat-label">کل هشدارها</span>
+                    <span class="stat-icon">▤</span>
+                </div>
+                <div class="stat-number" id="totalAlerts">—</div>
+                <p class="stat-foot">تمام رویدادهای ذخیره‌شده</p>
+            </article>
+
+            <article class="stat-card" style="--glow:var(--red)">
+                <div class="stat-head">
+                    <span class="stat-label">خطر بحرانی</span>
+                    <span class="stat-icon">!</span>
+                </div>
+                <div class="stat-number" id="criticalAlerts">—</div>
+                <p class="stat-foot">سطح Critical</p>
+            </article>
+
+            <article class="stat-card" style="--glow:var(--yellow)">
+                <div class="stat-head">
+                    <span class="stat-label">خطر بالا</span>
+                    <span class="stat-icon">⌁</span>
+                </div>
+                <div class="stat-number" id="highAlerts">—</div>
+                <p class="stat-foot">سطح High</p>
+            </article>
+
+            <article class="stat-card" style="--glow:var(--green)">
+                <div class="stat-head">
+                    <span class="stat-label">خطر متوسط و پایین</span>
+                    <span class="stat-icon">✓</span>
+                </div>
+                <div class="stat-number" id="otherAlerts">—</div>
+                <p class="stat-foot">سطح Medium و Low</p>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>توزیع سطح خطر</h2>
+                        <p>درصد هر سطح نسبت به کل هشدارها</p>
+                    </div>
+                    <span class="mini-tag">RISK OVERVIEW</span>
+                </div>
+
+                <div class="risk-list">
+                    <div class="risk-row">
+                        <span class="risk-name">بحرانی</span>
+                        <div class="track"><div class="bar" id="criticalBar" style="background:var(--red)"></div></div>
+                        <span class="risk-value" id="criticalPercent">0%</span>
+                    </div>
+                    <div class="risk-row">
+                        <span class="risk-name">بالا</span>
+                        <div class="track"><div class="bar" id="highBar" style="background:#ffad65"></div></div>
+                        <span class="risk-value" id="highPercent">0%</span>
+                    </div>
+                    <div class="risk-row">
+                        <span class="risk-name">متوسط</span>
+                        <div class="track"><div class="bar" id="mediumBar" style="background:var(--yellow)"></div></div>
+                        <span class="risk-value" id="mediumPercent">0%</span>
+                    </div>
+                    <div class="risk-row">
+                        <span class="risk-name">پایین</span>
+                        <div class="track"><div class="bar" id="lowBar" style="background:var(--green)"></div></div>
+                        <span class="risk-value" id="lowPercent">0%</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>وضعیت سیستم</h2>
+                        <p>وضعیت ارتباط با سرویس</p>
+                    </div>
+                    <span class="mini-tag">SYSTEM</span>
+                </div>
+
+                <div class="insight">
+                    <h3 id="systemTitle">در حال بررسی ارتباط...</h3>
+                    <p id="systemDescription">
+                        داشبورد در حال دریافت اطلاعات از API است.
+                    </p>
+                </div>
+
+                <p class="note">
+                    امتیازها و سطح خطر بر اساس قوانین اولیه تحلیل رویداد محاسبه می‌شوند.
+                    این نسخه به‌تنهایی جایگزین سامانه امنیتی واقعی یا بررسی متخصص نیست.
+                </p>
+            </article>
+        </section>
+
+        <section class="panel table-panel">
+            <div class="table-top">
+                <div class="panel-heading" style="margin-bottom:0">
+                    <div>
+                        <h2>رویدادها و هشدارهای اخیر</h2>
+                        <p>سوابق ذخیره‌شده در پایگاه داده Django</p>
+                    </div>
+                    <span class="mini-tag" id="resultCount">0 رویداد</span>
+                </div>
+
+                <div class="filters">
+                    <input id="searchInput" type="search"
+                           placeholder="جست‌وجوی IP یا نوع تهدید...">
+
+                    <select id="severityFilter" aria-label="فیلتر سطح خطر">
+                        <option value="">تمام سطح‌های خطر</option>
+                        <option value="Critical">بحرانی</option>
+                        <option value="High">بالا</option>
+                        <option value="Medium">متوسط</option>
+                        <option value="Low">پایین</option>
+                    </select>
+
+                    <select id="statusFilter" aria-label="فیلتر وضعیت">
+                        <option value="">تمام وضعیت‌ها</option>
+                        <option value="New">جدید</option>
+                        <option value="Analyzed">تحلیل‌شده</option>
+                        <option value="Resolved">برطرف‌شده</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>شناسه</th>
+                            <th>نوع تهدید</th>
+                            <th>IP مبدأ</th>
+                            <th>IP مقصد</th>
+                            <th>امتیاز ریسک</th>
+                            <th>سطح خطر</th>
+                            <th>وضعیت</th>
+                            <th>زمان ثبت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alertsTable">
+                        <tr><td colspan="8" class="empty">در حال دریافت اطلاعات...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <span>AI SHIELD · SECURITY DASHBOARD</span>
+            <span id="lastUpdated">هنوز به‌روزرسانی نشده</span>
+        </footer>
+    </main>
+</div>
+
+<script>
+    
+const API_BASE = "http://127.0.0.1:8000/api";
+
+async function apiFetch(path) {
+  const token = sessionStorage.getItem("aiShieldToken");
+
+  if (!token) {
+    window.location.href = "auth.html";
+    throw new Error("برای مشاهده اطلاعات باید وارد حساب شوید.");
+  }
+
+  const response = await fetch(`${API_BASE}${path}`, {
+    headers: {
+      "Authorization": `Token ${token}`
+    }
+  });
+
+  if (response.status === 401 || response.status === 403) {
+    sessionStorage.removeItem("aiShieldToken");
+    window.location.href = "auth.html";
+    throw new Error("نشست شما معتبر نیست؛ دوباره وارد شوید.");
+  }
+
+  if (!response.ok) {
+    throw new Error(`خطای سرور: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+    async function checkAdminAccess() {
+  const token = sessionStorage.getItem("aiShieldToken");
+
+  if (!token) {
+    window.location.replace("auth.html");
+    return false;
+  }
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/me/",
+      {
+        headers: {
+          "Authorization": `Token ${token}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      sessionStorage.removeItem("aiShieldToken");
+      window.location.replace("auth.html");
+      return false;
+    }
+
+    const user = await response.json();
+
+    if (!user.is_staff) {
+      document.body.innerHTML = `
+        <main style="padding:40px;text-align:center;color:white">
+          <h2>دسترسی مخصوص مدیران است</h2>
+          <p>این حساب مجوز ورود به پنل مدیریت را ندارد.</p>
+          <a href="index.html" style="color:#36d9f5">
+            بازگشت به صفحه اصلی
+          </a>
+        </main>`;
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    alert("ارتباط با سرور برقرار نشد.");
+    return false;
+  }
+}
+    // آدرس بک‌اند در زمان اجرای محلی
+    const API_BASE = "http://127.0.0.1:8000/api";
+
+    let allAlerts = [];
+
+    const $ = (id) => document.getElementById(id);
+
+    const severityNames = {
+        Critical: "بحرانی",
+        High: "بالا",
+        Medium: "متوسط",
+        Low: "پایین"
+    };
+
+    const statusNames = {
+        New: "جدید",
+        Analyzed: "تحلیل‌شده",
+        Resolved: "برطرف‌شده"
+    };
+
+    function safeText(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[char]);
+    }
+
+    function setConnection(connected) {
+        $("connectionStatus").textContent = connected
+            ? "● اتصال برقرار است"
+            : "● اتصال ناموفق";
+
+        $("connectionStatus").style.color = connected
+            ? "var(--green)"
+            : "var(--red)";
+
+        $("sidebarStatus").textContent = connected
+            ? "API CONNECTED"
+            : "API DISCONNECTED";
+
+        $("systemTitle").textContent = connected
+            ? "ارتباط با بک‌اند برقرار است"
+            : "ارتباط با بک‌اند برقرار نیست";
+
+        $("systemDescription").textContent = connected
+            ? "داده‌های داشبورد دریافت می‌شوند"
+            : "سرور را اجرا کنید و تنظیمات اتصال را بررسی کنید.";
+    }
+
+    function showError(message) {
+        $("errorMessage").textContent = message;
+        $("errorMessage").classList.add("show");
+    }
+
+    function hideError() {
+        $("errorMessage").textContent = "";
+        $("errorMessage").classList.remove("show");
+    }
+
+    async function fetchJSON(url) {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("خطای HTTP: " + response.status);
+        }
+
+        return response.json();
+    }
+
+    function updateStat(id, value) {
+        $(id).textContent = Number(value || 0).toLocaleString("fa-IR");
+    }
+
+    function updateBar(level, value, total) {
+        const percent = total > 0 ? Math.round((value / total) * 100) : 0;
+
+        $(level + "Bar").style.width = percent + "%";
+        $(level + "Percent").textContent = percent + "%";
+    }
+
+    function renderStats(data) {
+        const total = Number(data.total_alerts || 0);
+        const critical = Number(data.critical_alerts || 0);
+        const high = Number(data.high_alerts || 0);
+        const medium = Number(data.medium_alerts || 0);
+        const low = Number(data.low_alerts || 0);
+
+        updateStat("totalAlerts", total);
+        updateStat("criticalAlerts", critical);
+        updateStat("highAlerts", high);
+        updateStat("otherAlerts", medium + low);
+
+        updateBar("critical", critical, total);
+        updateBar("high", high, total);
+        updateBar("medium", medium, total);
+        updateBar("low", low, total);
+    }
+
+    function formatDate(value) {
+        if (!value) return "—";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) return "—";
+
+        return date.toLocaleString("fa-IR", {
+            dateStyle: "short",
+            timeStyle: "short"
+        });
+    }
+
+    function severityClass(value) {
+        return ["Critical", "High", "Medium", "Low"].includes(value)
+            ? value.toLowerCase()
+            : "low";
+    }
+
+    function renderTable() {
+        const search = $("searchInput").value.trim().toLowerCase();
+        const severity = $("severityFilter").value;
+        const statusValue = $("statusFilter").value;
+
+        const filtered = allAlerts.filter(alert => {
+            const text = [
+                alert.id,
+                alert.source_ip,
+                alert.destination_ip,
+                alert.threat_type,
+                alert.description
+            ].join(" ").toLowerCase();
+
+            return (!search || text.includes(search))
+                && (!severity || alert.severity === severity)
+                && (!statusValue || alert.status === statusValue);
+        });
+
+        $("resultCount").textContent =
+            filtered.length.toLocaleString("fa-IR") + " رویداد";
+
+        if (!filtered.length) {
+            $("alertsTable").innerHTML =
+                '<tr><td colspan="8" class="empty">رویدادی مطابق فیلترها پیدا نشد.</td></tr>';
+            return;
+        }
+
+        $("alertsTable").innerHTML = filtered.map(alert => {
+            const score = Number(alert.risk_score || 0);
+            const scoreClass = score >= 70 ? "high" : score >= 40 ? "medium" : "low";
+            const severity = severityNames[alert.severity] || safeText(alert.severity || "—");
+            const status = statusNames[alert.status] || safeText(alert.status || "—");
+
+            return `
+                <tr>
+                    <td>#${safeText(alert.id)}</td>
+                    <td>${safeText(alert.threat_type)}</td>
+                    <td class="ip">${safeText(alert.source_ip)}</td>
+                    <td class="ip">${safeText(alert.destination_ip)}</td>
+                    <td class="score ${scoreClass}">${score}/100</td>
+                    <td><span class="severity ${severityClass(alert.severity)}">${severity}</span></td>
+                    <td>${status}</td>
+                    <td>${formatDate(alert.created_at)}</td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    async function loadDashboard() {
+        const button = $("refreshBtn");
+        button.disabled = true;
+        button.textContent = "در حال دریافت...";
+        hideError();
+
+        try {
+            const [dashboard, alertsData] = await Promise.all([
+                fetchJSON(`${API_BASE}/dashboard/`),
+                fetchJSON(`${API_BASE}/alerts/`)
+            ]);
+
+            if (!Array.isArray(alertsData.results)) {
+                throw new Error("ساختار پاسخ API هشدارها معتبر نیست.");
+            }
+
+            allAlerts = alertsData.results;
+
+            renderStats(dashboard);
+            renderTable();
+            setConnection(true);
+
+            $("lastUpdated").textContent =
+                "آخرین به‌روزرسانی: " +
+                new Date().toLocaleTimeString("fa-IR");
+
+        } catch (error) {
+            setConnection(false);
+            showError(
+                "دریافت اطلاعات ناموفق بود. مطمئن شو Django در حال اجراست، " +
+                "آدرس API درست است و تنظیمات CORS فعال هستند. جزئیات: " +
+                error.message
+            );
+
+            $("alertsTable").innerHTML =
+                '<tr><td colspan="8" class="empty">اطلاعات دریافت نشد.</td></tr>';
+
+        } finally {
+            button.disabled = false;
+            button.textContent = "↻ به‌روزرسانی";
+        }
+    }
+
+    $("searchInput").addEventListener("input", renderTable);
+    $("severityFilter").addEventListener("change", renderTable);
+    $("statusFilter").addEventListener("change", renderTable);
+
+    loadDashboard();
+
+    // تازه‌سازی خودکار هر 30 ثانیه
+    setInterval(loadDashboard, 30000);
+</script>
+</body>
+</html>
