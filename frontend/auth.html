@@ -1,16 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ورود و ثبت‌نام | AI Shield</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -20,7 +18,7 @@
             justify-content: center;
             padding: 20px;
             font-family: "Vazirmatn", sans-serif;
-            background: #07111f;
+            background: radial-gradient(ellipse at top, #153652, #07111f 65%);
             color: #e8f1fc;
         }
 
@@ -28,9 +26,10 @@
             width: 100%;
             max-width: 420px;
             padding: 30px;
-            border: 1px solid #1d3047;
+            border: 1px solid #203851;
             border-radius: 20px;
             background: #0d1b2d;
+            box-shadow: 0 20px 70px #0005;
         }
 
         .logo {
@@ -56,7 +55,7 @@
         .tabs button {
             flex: 1;
             padding: 11px;
-            border: 1px solid #1d3047;
+            border: 1px solid #263b52;
             border-radius: 9px;
             background: #101f33;
             color: #a8b9ce;
@@ -73,13 +72,12 @@
         label {
             display: block;
             font-size: 13px;
-            margin-bottom: 7px;
+            margin: 14px 0 7px;
         }
 
         input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 17px;
             border: 1px solid #263d56;
             border-radius: 9px;
             background: #091727;
@@ -88,12 +86,11 @@
             outline: none;
         }
 
-        input:focus {
-            border-color: #36d9f5;
-        }
+        input:focus { border-color: #36d9f5; }
 
         .submit {
             width: 100%;
+            margin-top: 22px;
             padding: 13px;
             border: 0;
             border-radius: 9px;
@@ -110,6 +107,12 @@
             cursor: wait;
         }
 
+        .hint {
+            color: #8295ad;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
         #message {
             display: none;
             margin-top: 18px;
@@ -120,9 +123,7 @@
             overflow-wrap: anywhere;
         }
 
-        #message.show {
-            display: block;
-        }
+        #message.show { display: block; }
 
         #message.error {
             background: #351824;
@@ -136,19 +137,18 @@
 
         .back {
             display: block;
-            text-align: center;
             margin-top: 20px;
+            text-align: center;
             color: #36d9f5;
             text-decoration: none;
             font-size: 13px;
         }
     </style>
 </head>
-
 <body>
     <main class="card">
         <div class="logo">AI SHIELD</div>
-        <p class="subtitle">هوش مصنوعی در امنیت سایبری</p>
+        <p class="subtitle">سامانه امنیت و تشخیص تهدید</p>
 
         <div class="tabs">
             <button type="button" id="loginTab" class="active">ورود</button>
@@ -157,32 +157,21 @@
 
         <form id="authForm">
             <label for="username">نام کاربری</label>
-            <input
-                id="username"
-                name="username"
-                type="text"
-                autocomplete="username"
-                required
-            >
+            <input id="username" name="username" type="text"
+                   maxlength="150" autocomplete="username" required>
 
             <div id="emailGroup" hidden>
                 <label for="email">ایمیل (اختیاری)</label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autocomplete="email"
-                >
+                <input id="email" name="email" type="email" autocomplete="email">
             </div>
 
             <label for="password">رمز عبور</label>
-            <input
-                id="password"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                required
-            >
+            <input id="password" name="password" type="password"
+                   autocomplete="current-password" required>
+
+            <p id="passwordHint" class="hint" hidden>
+                رمز عبور باید شرایط امنیتی تعیین‌شده توسط سرور را داشته باشد.
+            </p>
 
             <button class="submit" id="submitBtn" type="submit">
                 ورود به حساب
@@ -190,7 +179,6 @@
         </form>
 
         <div id="message" role="status" aria-live="polite"></div>
-
         <a class="back" href="index.html">بازگشت به صفحه اصلی</a>
     </main>
 
@@ -202,30 +190,35 @@
         const registerTab = document.getElementById("registerTab");
         const emailGroup = document.getElementById("emailGroup");
         const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const passwordHint = document.getElementById("passwordHint");
         const submitBtn = document.getElementById("submitBtn");
         const message = document.getElementById("message");
-        const passwordInput = document.getElementById("password");
 
         let mode = "login";
+        let busy = false;
 
-        function showMessage(text, type) {
+        function showMessage(text, type = "error") {
             message.textContent = text;
             message.className = "show " + type;
         }
 
-        function setMode(newMode) {
-            mode = newMode;
+        function setMode(nextMode) {
+            if (busy) return;
 
-            loginTab.classList.toggle("active", mode === "login");
-            registerTab.classList.toggle("active", mode === "register");
+            mode = nextMode;
+            const registering = mode === "register";
 
-            emailGroup.hidden = mode !== "register";
+            loginTab.classList.toggle("active", !registering);
+            registerTab.classList.toggle("active", registering);
+            emailGroup.hidden = !registering;
+            passwordHint.hidden = !registering;
 
             passwordInput.autocomplete =
-                mode === "register" ? "new-password" : "current-password";
+                registering ? "new-password" : "current-password";
 
             submitBtn.textContent =
-                mode === "register" ? "ایجاد حساب کاربری" : "ورود به حساب";
+                registering ? "ایجاد حساب کاربری" : "ورود به حساب";
 
             message.className = "";
             message.textContent = "";
@@ -237,27 +230,25 @@
         form.addEventListener("submit", async function(event) {
             event.preventDefault();
 
-            if (form.dataset.busy === "true") return;
+            if (busy) return;
 
             const username = document.getElementById("username").value.trim();
             const password = passwordInput.value;
             const email = emailInput.value.trim();
 
             if (!username || !password) {
-                showMessage("نام کاربری و رمز عبور را وارد کن.", "error");
+                showMessage("نام کاربری و رمز عبور را وارد کنید.");
                 return;
             }
 
-            const endpoint =
-                mode === "register" ? "/register/" : "/login/";
-
-            const data = { username, password };
+            const endpoint = mode === "register" ? "/register/" : "/login/";
+            const payload = { username, password };
 
             if (mode === "register") {
-                data.email = email;
+                payload.email = email;
             }
 
-            form.dataset.busy = "true";
+            busy = true;
             submitBtn.disabled = true;
             submitBtn.textContent = "در حال بررسی...";
             message.className = "";
@@ -267,55 +258,70 @@
                 const response = await fetch(API_BASE + endpoint, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(payload)
                 });
 
-                const result = await response.json().catch(() => ({}));
+                const data = await response.json().catch(() => ({}));
 
                 if (!response.ok) {
-                    let errorText = result.error || result.detail ||
-                        "درخواست انجام نشد. دوباره تلاش کن.";
+                    let errorText =
+                        data.error || data.detail || data.message;
 
                     if (Array.isArray(errorText)) {
                         errorText = errorText.join(" ");
                     }
 
-                    throw new Error(errorText);
+                    if (errorText && typeof errorText === "object") {
+                        errorText = Object.values(errorText).flat().join(" ");
+                    }
+
+                    throw new Error(
+                        errorText || `درخواست ناموفق بود (خطای ${response.status}).`
+                    );
                 }
 
-                if (!result.token) {
-                    throw new Error("پاسخ سرور توکن ورود نداشت.");
+                if (!data.token) {
+                    throw new Error("سرور توکن ورود برنگرداند؛ تنظیمات API را بررسی کنید.");
                 }
 
-                sessionStorage.setItem("aiShieldToken", result.token);
+                sessionStorage.setItem("aiShieldToken", data.token);
 
-                showMessage(
-                    mode === "register"
-                        ? "ثبت‌نام موفق بود. در حال ورود..."
-                        : "ورود موفق بود. در حال انتقال...",
-                    "success"
-                );
+                if (data.username) {
+                    sessionStorage.setItem("aiShieldUsername", data.username);
+                }
 
-                window.setTimeout(() => {
+                if (data.is_staff) {
+                    showMessage("ورود موفق بود؛ در حال انتقال به داشبورد...", "success");
                     window.location.href = "dashboard.html";
-                }, 700);
+                    return;
+                }
+
+                if (mode === "register") {
+                    showMessage(
+                        "ثبت‌نام موفق بود؛ اما دسترسی داشبورد باید جداگانه تنظیم شود.",
+                        "success"
+                    );
+                } else {
+                    showMessage(
+                        "ورود موفق بود؛ حساب شما وارد شد، اما دسترسی داشبورد مدیران را ندارید.",
+                        "success"
+                    );
+                }
 
             } catch (error) {
                 showMessage(
                     error instanceof TypeError
-                        ? "اتصال به سرور برقرار نشد. ممکن است سرور خاموش باشد یا مشکل ارتباطی وجود داشته باشد."
-                        : error.message,
-                    "error"
+                        ? "ارتباط با سرور برقرار نشد. وضعیت Render و تنظیمات CORS را بررسی کنید."
+                        : error.message
                 );
             } finally {
-                form.dataset.busy = "false";
+                busy = false;
                 submitBtn.disabled = false;
                 submitBtn.textContent =
-                    mode === "register"
-                        ? "ایجاد حساب کاربری"
-                        : "ورود به حساب";
+                    mode === "register" ? "ایجاد حساب کاربری" : "ورود به حساب";
             }
         });
     </script>
