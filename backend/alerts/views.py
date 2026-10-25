@@ -1,5 +1,5 @@
 
-from django.utils import timezone
+import ipaddress
 
 from rest_framework import status as http_status
 from rest_framework.authentication import TokenAuthentication
@@ -8,7 +8,7 @@ from rest_framework.decorators import (
     authentication_classes,
     permission_classes,
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from .models import Alert
@@ -17,59 +17,80 @@ from .models import Alert
 def analyze_threat(threat_type, description):
     text = f"{threat_type} {description}".lower()
 
-    critical_words = [
-        "ransomware", "zero-day", "privilege escalation",
-        "باج افزار", "روز صفر", "افزایش سطح دسترسی",
-    ]
-    high_words = [
-        "network scan", "port scan", "malware",
-        "unauthorized access", "suspicious",
-        "اسکن شبکه", "اسکن پورت", "بدافزار",
-        "دسترسی غیرمجاز", "مشکوک",
-    ]
-    medium_words = [
-        "unusual", "anomaly", "reconnaissance",
-        "غیرعادی", "ناهنجاری", "شناسایی شبکه",
+    rules = [
+        (
+            95,
+            "Critical",
+            [
+                "ransomware",
+                "zero-day",
+                "privilege escalation",
+                "باج افزار",
+                "روز صفر",
+                "افزایش سطح دسترسی",
+            ],
+            "نشانه‌ای با ریسک بسیار بالا شناسایی شد.",
+            "فعالیت را بررسی کنید، دسترسی‌های مشکوک را محدود کنید "
+            "و با مسئول امنیت شبکه تماس بگیرید.",
+        ),
+        (
+            75,
+            "High",
+            [
+                "network scan",
+                "port scan",
+                "malware",
+                "unauthorized access",
+                "suspicious",
+                "اسکن شبکه",
+                "اسکن پورت",
+                "بدافزار",
+                "دسترسی غیرمجاز",
+                "مشکوک",
+            ],
+            "نشانه‌هایی از فعالیت مشکوک شناسایی شد.",
+            "منبع فعالیت را بررسی کنید و گزارش‌های امنیتی را "
+            "برای تأیید رخداد بازبینی کنید.",
+        ),
+        (
+            45,
+            "Medium",
+            [
+                "unusual",
+                "anomaly",
+                "reconnaissance",
+                "غیرعادی",
+                "ناهنجاری",
+                "شناسایی شبکه",
+            ],
+            "فعالیت ممکن است غیرعادی باشد و نیاز به بررسی بیشتر دارد.",
+            "رفتار معمول شبکه را با این فعالیت مقایسه کنید "
+            "و در صورت تکرار، بررسی دقیق‌تری انجام دهید.",
+        ),
     ]
 
-    if any(word in text for word in critical_words):
-        return {
-            "risk_score": 95,
-            "severity": "Critical",
-            "analysis": "نشانه‌هایی از تهدید بسیار جدی شناسایی شد.",
-            "recommendation": "موضوع را فوراً بررسی کنید و از متخصص امنیت کمک بگیرید.",
-        }
-
-    if any(word in text for word in high_words):
-        return {
-            "risk_score": 75,
-            "severity": "High",
-            "analysis": "نشانه‌هایی از فعالیت مشکوک یا پرخطر مشاهده شد.",
-            "recommendation": "منبع فعالیت را بررسی کنید و دسترسی‌های غیرضروری را محدود کنید.",
-        }
-
-    if any(word in text for word in medium_words):
-        return {
-            "risk_score": 45,
-            "severity": "Medium",
-            "analysis": "فعالیتی غیرمعمول مشاهده شده که نیاز به بررسی دارد.",
-            "recommendation": "جزئیات فعالیت را بررسی و در صورت تکرار پیگیری کنید.",
-        }
+    for score, severity, keywords, analysis, recommendation in rules:
+        if any(keyword in text for keyword in keywords):
+            return {
+                "risk_score": score,
+                "severity": severity,
+                "analysis": analysis,
+                "recommendation": recommendation,
+            }
 
     return {
         "risk_score": 10,
         "severity": "Low",
-        "analysis": "بر اساس قوانین ساده فعلی، نشانه‌ی مشخصی از تهدید جدی پیدا نشد.",
-        "recommendation": "به پایش امنیتی ادامه دهید.",
+        "analysis": "بر اساس قوانین ساده این نسخه، نشانه شناخته‌شده‌ای "
+                    "از ریسک بالا شناسایی نشد.",
+        "recommendation": "در صورت وجود نگرانی، اطلاعات تکمیلی و "
+                          "گزارش‌های شبکه را بررسی کنید.",
     }
 
 
 def visible_alerts(user):
-    # ادمین می‌تواند همه هشدارها را ببیند.
     if user.is_staff:
         return Alert.objects.all()
-
-    # کاربران عادی فقط هشدارهای خودشان را می‌بینند.
     return Alert.objects.filter(user=user)
 
 
@@ -89,34 +110,68 @@ def alert_to_dict(alert):
     }
 
 
-@api_view(["GET", "POST"])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@api_view(["POST"])
+@permission_classes([AllowAny])
 def alerts_api(request):
-    if request.method == "GET":
-        alerts = visible_alerts(request.user)
-        results = [alert_to_dict(alert) for alert in alerts]
-
-        return Response({
-            "count": len(results),
-            "results": results,
-        })
-
+    mode = request.data.get("mode", "ip")
     source_ip = request.data.get("source_ip")
     destination_ip = request.data.get("destination_ip")
-    threat_type = request.data.get("threat_type")
-    description = request.data.get("description", "")
+    threat_type = str(request.data.get("threat_type", "")).strip()
+    description = str(request.data.get("description", "")).strip()
 
-    if not source_ip or not destination_ip or not threat_type:
+    if mode not in ("ip", "text"):
         return Response(
-            {"error": "آی‌پی مبدأ، آی‌پی مقصد و نوع تهدید الزامی هستند."},
+            {"error": "روش تحلیل معتبر نیست."},
+            status=http_status.HTTP_400_BAD_REQUEST,
+        )
+
+    if mode == "ip":
+        if not source_ip or not destination_ip or not threat_type:
+            return Response(
+                {"error": "IP مبدأ، IP مقصد و نوع فعالیت الزامی هستند."},
+                status=http_status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            source_ip = str(ipaddress.ip_address(source_ip))
+            destination_ip = str(ipaddress.ip_address(destination_ip))
+        except ValueError:
+            return Response(
+                {"error": "یکی از آدرس‌های IP معتبر نیست."},
+                status=http_status.HTTP_400_BAD_REQUEST,
+            )
+
+    else:
+        if len(description) < 10:
+            return Response(
+                {"error": "توضیح فعالیت باید حداقل ۱۰ نویسه باشد."},
+                status=http_status.HTTP_400_BAD_REQUEST,
+            )
+
+        if len(description) > 5000:
+            return Response(
+                {"error": "متن بیش از حد طولانی است؛ حداکثر ۵۰۰۰ نویسه."},
+                status=http_status.HTTP_400_BAD_REQUEST,
+            )
+
+        source_ip = None
+        destination_ip = None
+        threat_type = threat_type or "Text Analysis"
+
+    if len(threat_type) > 100:
+        return Response(
+            {"error": "نوع فعالیت بیش از حد طولانی است."},
             status=http_status.HTTP_400_BAD_REQUEST,
         )
 
     result = analyze_threat(threat_type, description)
 
     alert = Alert.objects.create(
-        user=request.user,
+        user=(
+            request.user
+            if request.user.is_authenticated
+            else None
+        ),
         source_ip=source_ip,
         destination_ip=destination_ip,
         threat_type=threat_type,

@@ -1,669 +1,625 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Threat Detection | Demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d1b">
+  <title>تحلیل تهدید | AI Shield</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d1b;
+      --panel: #101a2d;
+      --line: #24334d;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --blue: #60a5fa;
+      --cyan: #67e8f9;
+    }
 
-    <link rel="stylesheet" href="style.css">
+    * { box-sizing: border-box; }
 
-    <style>
-        .demo-page {
-            min-height: 100vh;
-            padding: 110px 7% 70px;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(0, 200, 255, 0.08), transparent 30%),
-                radial-gradient(circle at 80% 70%, rgba(0, 120, 255, 0.08), transparent 30%);
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 10% 0%, #16365c 0, transparent 40%),
+        radial-gradient(ellipse at 90% 20%, #20204d 0, transparent 35%),
+        var(--bg);
+      font-family: Tahoma, "Segoe UI", sans-serif;
+      line-height: 1.8;
+    }
 
-        .demo-header {
-            text-align: center;
-            margin-bottom: 45px;
-        }
+    button, input, select, textarea { font: inherit; }
 
-        .demo-label {
-            display: inline-block;
-            font-size: 12px;
-            letter-spacing: 3px;
-            color: #55ddff;
-            margin-bottom: 15px;
-        }
+    a { color: inherit; text-decoration: none; }
 
-        .demo-header h1 {
-            font-size: clamp(32px, 5vw, 58px);
-            margin: 0 0 15px;
-        }
+    .nav {
+      max-width: 1120px;
+      margin: auto;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-        .demo-header p {
-            color: #9daab8;
-            max-width: 650px;
-            margin: auto;
-            line-height: 2;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
 
-        .demo-panel {
-            max-width: 1100px;
-            margin: auto;
-            background: rgba(8, 17, 30, 0.9);
-            border: 1px solid rgba(80, 210, 255, 0.18);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 0 60px rgba(0, 170, 255, 0.08);
-        }
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2563eb, #22d3ee);
+      color: white;
+      box-shadow: 0 8px 28px #2563eb40;
+    }
 
-        .panel-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 25px;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-        }
+    .nav-link {
+      color: #cbd5e1;
+      font-size: 13px;
+    }
 
-        .window-dots {
-            display: flex;
-            gap: 7px;
-        }
+    .container {
+      max-width: 920px;
+      padding: 28px 20px 70px;
+      margin: auto;
+    }
 
-        .window-dots span {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: #52606d;
-        }
+    .hero { text-align: center; margin: 12px 0 32px; }
 
-        .panel-title {
-            color: #7e8d9c;
-            font-size: 13px;
-        }
+    .eyebrow {
+      display: inline-block;
+      color: var(--cyan);
+      background: #164e6338;
+      border: 1px solid #155e75;
+      padding: 5px 13px;
+      border-radius: 100px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
 
-        .system-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #69e6b1;
-            font-size: 12px;
-        }
+    h1 {
+      font-size: clamp(27px, 5vw, 42px);
+      line-height: 1.5;
+      margin: 4px 0 10px;
+    }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #69e6b1;
-            box-shadow: 0 0 12px #69e6b1;
-        }
+    .hero p {
+      max-width: 570px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 25px;
-        }
+    .panel {
+      background: linear-gradient(145deg, #111e33f5, #0d1526f5);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: clamp(18px, 4vw, 32px);
+      box-shadow: 0 24px 80px #0003;
+    }
 
-        .demo-card {
-            background: rgba(255,255,255,0.025);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 18px;
-            padding: 22px;
-        }
+    .section-title {
+      font-size: 17px;
+      margin: 0 0 5px;
+    }
 
-        .card-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 22px;
+    }
 
-        .card-title h3 {
-            margin: 0;
-            font-size: 15px;
-        }
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
 
-        .card-title span {
-            color: #667686;
-            font-size: 11px;
-        }
+    .tab {
+      border: 1px solid var(--line);
+      background: #0b1323;
+      color: #cbd5e1;
+      border-radius: 15px;
+      padding: 15px 12px;
+      text-align: right;
+      cursor: pointer;
+      transition: .2s ease;
+    }
 
-        .data-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .tab strong { display: block; font-size: 14px; }
+    .tab span { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; }
 
-        .data-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 14px;
-            background: rgba(255,255,255,0.025);
-            border-radius: 10px;
-            font-size: 12px;
-        }
+    .tab.active {
+      border-color: #3b82f6;
+      background: linear-gradient(135deg, #1d4ed833, #0891b21c);
+      box-shadow: inset 0 0 0 1px #3b82f622;
+    }
 
-        .data-row .name {
-            color: #aab6c2;
-        }
+    .tab:focus-visible, button:focus-visible,
+    input:focus-visible, select:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
 
-        .data-row .value {
-            color: #e6f7ff;
-            direction: ltr;
-        }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
 
-        .analysis-box {
-            min-height: 220px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field.full { grid-column: 1 / -1; }
 
-        .analysis-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            border-radius: 50%;
-            border: 1px solid rgba(75, 220, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #5ee4ff;
-            font-size: 28px;
-            box-shadow: 0 0 30px rgba(0, 200, 255, 0.12);
-        }
+    label { font-size: 13px; color: #e2e8f0; }
 
-        .analysis-text {
-            text-align: center;
-            color: #a9b6c2;
-            font-size: 13px;
-            min-height: 25px;
-        }
+    input, select, textarea {
+      width: 100%;
+      color: var(--text);
+      background: #080f1e;
+      border: 1px solid #2a3a54;
+      border-radius: 12px;
+      padding: 13px 14px;
+      outline: none;
+      transition: border .2s;
+    }
 
-        .progress {
-            width: 100%;
-            height: 5px;
-            background: #182431;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-top: 18px;
-        }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+    }
 
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #37c9ff, #6ee7ff);
-            transition: width 0.5s ease;
-        }
+    input::placeholder, textarea::placeholder { color: #64748b; }
 
-        .risk-card {
-            text-align: center;
-        }
+    textarea { min-height: 160px; resize: vertical; }
 
-        .risk-score {
-            font-size: 58px;
-            font-weight: 700;
-            color: #62dcff;
-            line-height: 1;
-            margin: 20px 0 10px;
-        }
+    .hint { color: var(--muted); font-size: 11px; }
 
-        .risk-label {
-            color: #778695;
-            font-size: 12px;
-        }
+    .submit {
+      width: 100%;
+      margin-top: 24px;
+      border: 0;
+      border-radius: 13px;
+      padding: 15px;
+      color: white;
+      background: linear-gradient(100deg, #2563eb, #0891b2);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 28px #2563eb30;
+      transition: opacity .2s, transform .2s;
+    }
 
-        .risk-bar {
-            height: 8px;
-            background: #172330;
-            border-radius: 20px;
-            margin: 25px 0 10px;
-            overflow: hidden;
-        }
+    .submit:hover { transform: translateY(-1px); }
+    .submit:disabled { opacity: .55; cursor: wait; transform: none; }
 
-        .risk-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #4de0ff, #ffbd5c, #ff6675);
-            transition: width 1s ease;
-        }
+    .message {
+      display: none;
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin-top: 18px;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
 
-        .alert-box {
-            grid-column: 1 / -1;
-            padding: 22px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.07);
-            background: rgba(255,255,255,0.02);
-            display: none;
-        }
+    .message.error { display: block; color: #fecaca; background: #7f1d1d55; border: 1px solid #991b1b; }
+    .message.info { display: block; color: #bae6fd; background: #0c4a6e55; border: 1px solid #075985; }
 
-        .alert-box.show {
-            display: block;
-            animation: alertAppear 0.5s ease;
-        }
+    .result {
+      display: none;
+      margin-top: 22px;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #0a1322;
+    }
 
-        @keyframes alertAppear {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+    .result.show { display: block; animation: appear .35s ease; }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .alert-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #ffbd5c;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
 
-        .alert-box p {
-            color: #9caab7;
-            font-size: 13px;
-            line-height: 2;
-            margin: 0;
-        }
+    .result-top h2 { margin: 0; font-size: 17px; }
 
-        .evidence {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 15px;
-        }
+    .severity {
+      display: inline-block;
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 800;
+    }
 
-        .evidence span {
-            padding: 7px 11px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.04);
-            color: #a9bac7;
-            font-size: 11px;
-        }
+    .severity.Low { color: #86efac; background: #14532d77; }
+    .severity.Medium { color: #fde68a; background: #78350f77; }
+    .severity.High { color: #fdba74; background: #9a341277; }
+    .severity.Critical { color: #fca5a5; background: #991b1b77; }
 
-        .demo-actions {
-            display: flex;
-            justify-content: center;
-            padding: 0 25px 30px;
-        }
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 22px;
+    }
 
-        .start-btn {
-            border: none;
-            cursor: pointer;
-            padding: 14px 35px;
-            border-radius: 12px;
-            color: #06111a;
-            background: #5de0ff;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 700;
-            transition: 0.25s;
-            box-shadow: 0 0 25px rgba(70, 210, 255, 0.15);
-        }
+    .track {
+      height: 9px;
+      border-radius: 100px;
+      overflow: hidden;
+      background: #263449;
+      margin: 10px 0 22px;
+    }
 
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(70, 210, 255, 0.3);
-        }
+    .bar {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #facc15, #f97316, #ef4444);
+      transition: width .6s ease;
+    }
 
-        .start-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+    .result-block {
+      border-top: 1px solid var(--line);
+      padding-top: 15px;
+      margin-top: 15px;
+    }
 
-        @media (max-width: 750px) {
-            .demo-page {
-                padding: 90px 5% 50px;
-            }
+    .result-block h3 { font-size: 13px; margin: 0 0 7px; color: var(--cyan); }
+    .result-block p { font-size: 13px; margin: 0; color: #dbeafe; white-space: pre-wrap; overflow-wrap: anywhere; }
 
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
+    .meta {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 17px;
+      overflow-wrap: anywhere;
+    }
 
-            .alert-box {
-                grid-column: auto;
-            }
+    .disclaimer {
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+      margin: 20px 5px 0;
+    }
 
-            .panel-top {
-                padding: 15px;
-            }
+    footer { color: #64748b; text-align: center; font-size: 11px; margin-top: 30px; }
 
-            .dashboard {
-                padding: 15px;
-            }
-
-            .demo-actions {
-                padding: 0 15px 20px;
-            }
-        }
-    </style>
+    @media (max-width: 600px) {
+      .nav { padding: 16px; }
+      .container { padding: 16px 12px 45px; }
+      .panel { border-radius: 18px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .tabs { gap: 8px; }
+      .tab { padding: 12px 9px; }
+    }
+  </style>
 </head>
 
 <body>
+  <header class="nav">
+    <a class="brand" href="index.html">
+      <span class="logo" aria-hidden="true">✦</span>
+      <span>AI SHIELD</span>
+    </a>
+    <a class="nav-link" href="index.html">بازگشت به صفحه اصلی ←</a>
+  </header>
 
-    <main class="demo-page">
+  <main class="container">
+    <section class="hero">
+      <span class="eyebrow">CYBER THREAT ANALYSIS</span>
+      <h1>امنیت شبکه، با دیدی هوشمندتر</h1>
+      <p>
+        روش تحلیل را انتخاب کن، اطلاعات را وارد کن و گزارش اولیه
+        ریسک را همراه با پیشنهاد امنیتی دریافت کن.
+      </p>
+    </section>
 
-        <section class="demo-header">
-            <span class="demo-label">AI THREAT DETECTION</span>
-            <h1>دموی تشخیص تهدید</h1>
-            <p>
-                در این شبیه‌سازی، هوش مصنوعی داده‌های یک رویداد شبکه را
-                بررسی کرده و میزان خطر و احتمال وجود تهدید را ارزیابی می‌کند.
-            </p>
-        </section>
+    <section class="panel">
+      <h2 class="section-title">شروع تحلیل جدید</h2>
+      <p class="section-subtitle">یکی از روش‌های زیر را انتخاب کن.</p>
 
-        <section class="demo-panel">
+      <div class="tabs" role="group" aria-label="روش تحلیل">
+        <button class="tab active" id="ipTab" type="button" aria-pressed="true">
+          <strong>⌘ تحلیل با IP</strong>
+          <span>بررسی اطلاعات مبدأ و مقصد</span>
+        </button>
+        <button class="tab" id="textTab" type="button" aria-pressed="false">
+          <strong>≡ تحلیل متنی</strong>
+          <span>بررسی شرح فعالیت مشکوک</span>
+        </button>
+      </div>
 
-            <div class="panel-top">
-                <div class="window-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+      <form id="analysisForm">
+        <div id="ipFields" class="form-grid">
+          <div class="field">
+            <label for="source_ip">IP مبدأ</label>
+            <input id="source_ip" name="source_ip"
+              placeholder="مثلاً 192.168.1.24"
+              autocomplete="off" spellcheck="false">
+            <span class="hint">آدرس دستگاه یا منبع رویداد</span>
+          </div>
 
-                <div class="panel-title">
-                    AI SECURITY ANALYZER
-                </div>
+          <div class="field">
+            <label for="destination_ip">IP مقصد</label>
+            <input id="destination_ip" name="destination_ip"
+              placeholder="مثلاً 185.44.72.19"
+              autocomplete="off" spellcheck="false">
+            <span class="hint">آدرس مقصد ارتباط</span>
+          </div>
 
-                <div class="system-status">
-                    <span class="status-dot"></span>
-                    سیستم فعال
-                </div>
-            </div>
+          <div class="field full">
+            <label for="threat_type">نوع فعالیت</label>
+            <select id="threat_type" name="threat_type">
+              <option value="Network Scan">اسکن شبکه (Network Scan)</option>
+              <option value="Malware">بدافزار (Malware)</option>
+              <option value="Unauthorized Access">دسترسی غیرمجاز</option>
+              <option value="Unusual Activity">فعالیت غیرعادی</option>
+              <option value="Ransomware">باج‌افزار (Ransomware)</option>
+              <option value="Other">سایر موارد</option>
+            </select>
+          </div>
 
-            <div class="dashboard">
+          <div class="field full">
+            <label for="ip_description">توضیحات تکمیلی (اختیاری)</label>
+            <textarea id="ip_description"
+              placeholder="مثلاً تعداد درخواست‌ها یا رفتار مشاهده‌شده..."></textarea>
+          </div>
+        </div>
 
-                <div class="demo-card">
+        <div id="textFields" class="form-grid" hidden>
+          <div class="field full">
+            <label for="activity_text">شرح فعالیت مشکوک</label>
+            <textarea id="activity_text"
+              placeholder="شرح دقیق رویداد، پیام خطا یا رفتار مشکوک را بنویس..."
+              maxlength="5000"></textarea>
+            <span class="hint">حداقل ۱۰ و حداکثر ۵۰۰۰ نویسه</span>
+          </div>
+        </div>
 
-                    <div class="card-title">
-                        <h3>داده‌های ورودی</h3>
-                        <span>NETWORK EVENT</span>
-                    </div>
+        <button class="submit" id="submitButton" type="submit">
+          تحلیل امنیتی ←
+        </button>
 
-                    <div class="data-list">
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+      </form>
 
-                        <div class="data-row">
-                            <span class="name">آدرس مبدأ</span>
-                            <span class="value">192.168.1.24</span>
-                        </div>
+      <section id="result" class="result" aria-live="polite">
+        <div class="result-top">
+          <h2>گزارش تحلیل</h2>
+          <span id="severity" class="severity Low">Low</span>
+        </div>
 
-                        <div class="data-row">
-                            <span class="name">آدرس مقصد</span>
-                            <span class="value">185.44.72.19</span>
-                        </div>
+        <div class="score-row">
+          <span>امتیاز ریسک</span>
+          <strong id="scoreText">0 از 100</strong>
+        </div>
+        <div class="track">
+          <div id="scoreBar" class="bar"></div>
+        </div>
 
-                        <div class="data-row">
-                            <span class="name">نوع رویداد</span>
-                            <span class="value">Network Request</span>
-                        </div>
+        <div class="result-block">
+          <h3>نتیجه بررسی</h3>
+          <p id="analysisText"></p>
+        </div>
 
-                        <div class="data-row">
-                            <span class="name">تعداد درخواست</span>
-                            <span class="value">1,284</span>
-                        </div>
+        <div class="result-block">
+          <h3>پیشنهاد امنیتی</h3>
+          <p id="recommendationText"></p>
+        </div>
 
-                        <div class="data-row">
-                            <span class="name">وضعیت اتصال</span>
-                            <span class="value">Unusual</span>
-                        </div>
+        <div class="meta" id="resultMeta"></div>
+      </section>
+    </section>
 
-                    </div>
+    <p class="disclaimer">
+      این ابزار نسخه اولیه و قانون‌محور است؛ نتیجه آن به‌تنهایی اثبات
+      وجود یا نبود حمله نیست. برای تصمیم امنیتی مهم، بررسی تخصصی لازم است.
+    </p>
 
-                </div>
+    <footer>AI SHIELD · CYBERSECURITY ANALYSIS</footer>
+  </main>
 
+  <script>
+    "use strict";
 
-                <div class="demo-card analysis-box">
+    const API_BASE = (
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1"
+    )
+      ? "http://127.0.0.1:8000/api"
+      : "https://ai-shield-1-y5ol.onrender.com/api";
 
-                    <div class="card-title">
-                        <h3>تحلیل هوش مصنوعی</h3>
-                        <span>AI ANALYSIS</span>
-                    </div>
+    const form = document.getElementById("analysisForm");
+    const ipTab = document.getElementById("ipTab");
+    const textTab = document.getElementById("textTab");
+    const ipFields = document.getElementById("ipFields");
+    const textFields = document.getElementById("textFields");
+    const submitButton = document.getElementById("submitButton");
+    const message = document.getElementById("message");
+    const result = document.getElementById("result");
 
-                    <div class="analysis-icon" id="analysisIcon">
-                        ◉
-                    </div>
+    let mode = "ip";
 
-                    <div class="analysis-text" id="analysisText">
-                        آماده شروع تحلیل
-                    </div>
+    function selectMode(nextMode) {
+      mode = nextMode;
+      const isIP = mode === "ip";
 
-                    <div class="progress">
-                        <div class="progress-bar" id="progressBar"></div>
-                    </div>
+      ipFields.hidden = !isIP;
+      textFields.hidden = isIP;
 
-                </div>
+      ipTab.classList.toggle("active", isIP);
+      textTab.classList.toggle("active", !isIP);
+      ipTab.setAttribute("aria-pressed", String(isIP));
+      textTab.setAttribute("aria-pressed", String(!isIP));
 
+      submitButton.textContent = isIP
+        ? "تحلیل امنیتی با IP ←"
+        : "تحلیل متن ←";
 
-                <div class="demo-card risk-card">
-
-                    <div class="card-title">
-                        <h3>امتیاز ریسک</h3>
-                        <span>RISK SCORE</span>
-                    </div>
-
-                    <div class="risk-score" id="riskScore">
-                        0%
-                    </div>
-
-                    <div class="risk-label">
-                        میزان احتمال وجود تهدید
-                    </div>
-
-                    <div class="risk-bar">
-                        <div class="risk-fill" id="riskFill"></div>
-                    </div>
-
-                </div>
-
-
-                <div class="demo-card">
-
-                    <div class="card-title">
-                        <h3>فرآیند تشخیص</h3>
-                        <span>DETECTION FLOW</span>
-                    </div>
-
-                    <div class="data-list">
-
-                        <div class="data-row">
-                            <span class="name">01 — جمع‌آوری داده</span>
-                            <span class="value" id="step1">○</span>
-                        </div>
-
-                        <div class="data-row">
-                            <span class="name">02 — پیش‌پردازش</span>
-                            <span class="value" id="step2">○</span>
-                        </div>
-
-                        <div class="data-row">
-                            <span class="name">03 — تحلیل و تشخیص</span>
-                            <span class="value" id="step3">○</span>
-                        </div>
-
-                        <div class="data-row">
-                            <span class="name">04 — ایجاد هشدار</span>
-                            <span class="value" id="step4">○</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="alert-box" id="alertBox">
-
-                    <div class="alert-title">
-                        ⚠ تهدید مشکوک شناسایی شد
-                    </div>
-
-                    <p>
-                        سیستم پس از تحلیل داده‌های ورودی، یک الگوی غیرعادی
-                        را شناسایی کرده است. این نتیجه به‌عنوان یک هشدار
-                        امنیتی برای بررسی بیشتر ثبت می‌شود.
-                    </p>
-
-                    <div class="evidence">
-                        <span>رفتار غیرعادی</span>
-                        <span>تعداد درخواست بالا</span>
-                        <span>مقصد ناشناس</span>
-                        <span>Risk Score: 87%</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="demo-actions">
-                <button class="start-btn" id="startBtn">
-                    شروع تحلیل
-                </button>
-            </div>
-
-        </section>
-
-    </main>
-
-
-   
-<script>
-    const API_URL = "https://ai-shield-1-y5ol.onrender.com/api/alerts/";
-
-    const startBtn = document.getElementById("startBtn");
-    const progressBar = document.getElementById("progressBar");
-    const analysisText = document.getElementById("analysisText");
-    const analysisIcon = document.getElementById("analysisIcon");
-    const riskScore = document.getElementById("riskScore");
-    const riskFill = document.getElementById("riskFill");
-    const alertBox = document.getElementById("alertBox");
-    const alertTitle = alertBox.querySelector(".alert-title");
-    const alertParagraph = alertBox.querySelector("p");
-    const evidence = alertBox.querySelector(".evidence");
-
-    const steps = [
-        document.getElementById("step1"),
-        document.getElementById("step2"),
-        document.getElementById("step3"),
-        document.getElementById("step4")
-    ];
-
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+      message.className = "message";
+      message.textContent = "";
+      result.classList.remove("show");
     }
 
-    async function startAnalysis() {
-        startBtn.disabled = true;
-        startBtn.textContent = "در حال تحلیل...";
-        alertBox.classList.remove("show");
+    ipTab.addEventListener("click", () => selectMode("ip"));
+    textTab.addEventListener("click", () => selectMode("text"));
 
-        progressBar.style.width = "0%";
-        riskFill.style.width = "0%";
-        riskScore.textContent = "0%";
-        analysisIcon.textContent = "◉";
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
 
-        steps.forEach(step => step.textContent = "○");
+    function isValidIP(value) {
+      const parts = value.trim().split(".");
+      const isIPv4 = parts.length === 4 &&
+        parts.every(part =>
+          /^\d{1,3}$/.test(part) &&
+          Number(part) >= 0 &&
+          Number(part) <= 255
+        );
 
-        try {
-            const stages = [
-                "در حال آماده‌سازی داده‌ها...",
-                "در حال ارسال داده‌ها به بک‌اند...",
-                "بک‌اند در حال تحلیل رویداد...",
-                "در انتظار نتیجه تحلیل..."
-            ];
+      const isIPv6 = value.includes(":") &&
+        /^[0-9a-fA-F:]+$/.test(value);
 
-            for (let i = 0; i < stages.length; i++) {
-                analysisText.textContent = stages[i];
-                progressBar.style.width = ((i + 1) * 25) + "%";
-                steps[i].textContent = "✓";
-                await sleep(350);
-            }
+      return isIPv4 || isIPv6;
+    }
 
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    source_ip: "192.168.1.24",
-                    destination_ip: "185.44.72.19",
-                    threat_type: "Network Scan",
-                    description:
-                        "Unusual network activity, suspicious network scan, high number of requests (1284), and possible unauthorized access."
-                })
-            });
+    function showResult(data) {
+      const score = Number(data.risk_score);
+      const safeScore = Number.isFinite(score)
+        ? Math.max(0, Math.min(100, score))
+        : 0;
 
-            const result = await response.json();
+      const severity = ["Low", "Medium", "High", "Critical"]
+        .includes(data.severity) ? data.severity : "Low";
 
-            if (!response.ok) {
-                throw new Error(result.error || "خطا در تحلیل رویداد");
-            }
+      document.getElementById("severity").textContent = ({
+        Low: "کم",
+        Medium: "متوسط",
+        High: "زیاد",
+        Critical: "بحرانی"
+      })[severity];
 
-            const score = Math.max(
-                0,
-                Math.min(100, Number(result.risk_score) || 0)
-            );
+      document.getElementById("severity").className =
+        "severity " + severity;
 
-            const severityNames = {
-                low: "کم",
-                medium: "متوسط",
-                high: "زیاد",
-                critical: "بحرانی"
-            };
+      document.getElementById("scoreText").textContent =
+        safeScore + " از 100";
 
-            const severity = severityNames[result.severity] || result.severity;
+      document.getElementById("scoreBar").style.width =
+        safeScore + "%";
 
-            riskScore.textContent = score + "%";
-            riskFill.style.width = score + "%";
-            progressBar.style.width = "100%";
-            analysisIcon.textContent = score >= 40 ? "!" : "✓";
+      document.getElementById("analysisText").textContent =
+        data.analysis || "تحلیلی ارائه نشده است.";
 
-            analysisText.textContent =
-                "تحلیل بک‌اند تکمیل شد — سطح تهدید: " + severity;
+      document.getElementById("recommendationText").textContent =
+        data.recommendation || "پیشنهادی ارائه نشده است.";
 
-            alertTitle.textContent =
-                score >= 40
-                    ? "⚠ نتیجه تحلیل: رویداد نیازمند بررسی"
-                    : "✓ نتیجه تحلیل: سطح ریسک پایین‌تر است";
+      const ips = data.source_ip && data.destination_ip
+        ? "مبدأ: " + data.source_ip + " | مقصد: " + data.destination_ip
+        : "روش: تحلیل متنی";
 
-            alertParagraph.textContent =
-                (result.analysis || "تحلیل اضافی ارائه نشده است.") +
-                " توصیه: " +
-                (result.recommendation || "رویداد را بررسی کنید.");
+      document.getElementById("resultMeta").textContent =
+        "شناسه گزارش: " + data.id + " | " + ips;
 
-            evidence.replaceChildren();
+      result.classList.add("show");
+      result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
 
-            [
-                "سطح تهدید: " + severity,
-                "امتیاز ریسک: " + score + "%",
-                "شماره هشدار: " + result.id,
-                "وضعیت: " + (result.status || "new")
-            ].forEach(text => {
-                const tag = document.createElement("span");
-                tag.textContent = text;
-                evidence.appendChild(tag);
-            });
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-            alertBox.classList.add("show");
+      message.className = "message";
+      message.textContent = "";
+      result.classList.remove("show");
 
-        } catch (error) {
-            analysisIcon.textContent = "!";
-            analysisText.textContent =
-                "اتصال یا تحلیل ناموفق بود: " + error.message;
+      const payload = { mode };
 
-            progressBar.style.width = "0%";
+      if (mode === "ip") {
+        const sourceIP = document.getElementById("source_ip").value.trim();
+        const destinationIP =
+          document.getElementById("destination_ip").value.trim();
 
-            alertBox.classList.remove("show");
-
-        } finally {
-            startBtn.disabled = false;
-            startBtn.textContent = "اجرای دوباره تحلیل";
+        if (!isValidIP(sourceIP) || !isValidIP(destinationIP)) {
+          showMessage("لطفاً هر دو IP را به شکل معتبر وارد کن.", "error");
+          return;
         }
-    }
 
-    startBtn.addEventListener("click", startAnalysis);
-</script>
+        payload.source_ip = sourceIP;
+        payload.destination_ip = destinationIP;
+        payload.threat_type =
+          document.getElementById("threat_type").value;
+        payload.description =
+          document.getElementById("ip_description").value.trim();
+      } else {
+        const description =
+          document.getElementById("activity_text").value.trim();
 
+        if (description.length < 10) {
+          showMessage("شرح فعالیت باید حداقل ۱۰ نویسه باشد.", "error");
+          return;
+        }
 
+        payload.description = description;
+        payload.threat_type = "Text Analysis";
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "در حال تحلیل...";
+
+      try {
+        const response = await fetch(API_BASE + "/alerts/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(
+            data.error || data.detail ||
+            "درخواست ناموفق بود. لطفاً اطلاعات را بررسی کن."
+          );
+        }
+
+        showMessage("تحلیل انجام شد و گزارش ذخیره شد.", "info");
+        showResult(data);
+      } catch (error) {
+        showMessage(
+          error.message ||
+          "اتصال به سرور برقرار نشد. وضعیت بک‌اند را بررسی کن.",
+          "error"
+        );
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = mode === "ip"
+          ? "تحلیل امنیتی با IP ←"
+          : "تحلیل متن ←";
+      }
+    });
+  </script>
 </body>
 </html>
