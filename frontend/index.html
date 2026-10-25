@@ -1,201 +1,733 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07111f">
+    <title>AI Shield | تحلیل تهدیدات سایبری</title>
+    <meta name="description" content="تحلیل اولیه فعالیت‌های مشکوک سایبری با استفاده از IP یا توضیحات فعالیت.">
 
-    <title>AI Shield | هوش مصنوعی در امنیت سایبری</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
 
-    <link rel="stylesheet" href="style.css">
+        :root {
+            --bg: #07111f;
+            --panel: #0d1b2d;
+            --border: #203750;
+            --cyan: #36d9f5;
+            --blue: #168bff;
+            --text: #edf5ff;
+            --muted: #91a5bd;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(ellipse at 50% 0%, #12314b 0%, transparent 55%),
+                var(--bg);
+            color: var(--text);
+            font-family: "Vazirmatn", sans-serif;
+            min-height: 100vh;
+        }
+
+        button, input, textarea, select { font: inherit; }
+
+        .container {
+            width: min(1050px, calc(100% - 36px));
+            margin: auto;
+        }
+
+        header {
+            min-height: 82px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #ffffff0c;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: .3px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #36d9f54a;
+            border-radius: 13px;
+            background: #36d9f510;
+            color: var(--cyan);
+            font-size: 23px;
+        }
+
+        .brand span { color: var(--cyan); }
+
+        .header-note {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 65px 0 38px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #36d9f52e;
+            border-radius: 100px;
+            padding: 7px 13px;
+            color: var(--cyan);
+            background: #36d9f50b;
+            font-size: 12px;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--cyan);
+        }
+
+        h1 {
+            margin: 22px 0 13px;
+            font-size: clamp(30px, 5vw, 48px);
+            line-height: 1.5;
+            font-weight: 800;
+        }
+
+        h1 span {
+            color: var(--cyan);
+        }
+
+        .hero p {
+            max-width: 620px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 2.2;
+        }
+
+        .analysis-section {
+            max-width: 760px;
+            margin: 0 auto 70px;
+            scroll-margin-top: 24px;
+        }
+
+        .panel {
+            padding: clamp(20px, 4vw, 34px);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: linear-gradient(145deg, #0f2034, #0a1727);
+            box-shadow: 0 25px 90px #0003;
+        }
+
+        .panel-heading {
+            margin-bottom: 23px;
+        }
+
+        .panel-heading h2 {
+            margin: 0 0 8px;
+            font-size: 21px;
+        }
+
+        .panel-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 2;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            padding: 5px;
+            margin-bottom: 25px;
+            border: 1px solid #203750;
+            border-radius: 13px;
+            background: #071321;
+        }
+
+        .tab {
+            padding: 12px 8px;
+            border: 0;
+            border-radius: 9px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .tab.active {
+            background: #153b58;
+            color: var(--cyan);
+            box-shadow: inset 0 0 0 1px #36d9f528;
+        }
+
+        .field { margin-bottom: 19px; }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #29435d;
+            border-radius: 10px;
+            outline: none;
+            background: #071525;
+            color: var(--text);
+            transition: border-color .2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--cyan);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #60758c;
+        }
+
+        textarea {
+            min-height: 145px;
+            resize: vertical;
+            line-height: 2;
+        }
+
+        .field-hint {
+            display: block;
+            margin-top: 7px;
+            color: #8197af;
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            min-height: 51px;
+            margin-top: 5px;
+            border: 0;
+            border-radius: 11px;
+            background: linear-gradient(100deg, #167eea, #19b9d6);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity .2s, transform .2s;
+        }
+
+        .analyze-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .analyze-btn:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .privacy-note {
+            margin: 14px 0 0;
+            color: #8197af;
+            text-align: center;
+            font-size: 11px;
+            line-height: 2;
+        }
+
+        #message {
+            display: none;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 11px;
+            font-size: 13px;
+            line-height: 2;
+            overflow-wrap: anywhere;
+        }
+
+        #message.show { display: block; }
+        #message.error { background: #351824; color: #ffabb7; }
+        #message.info { background: #132c43; color: #a9dfff; }
+
+        #result {
+            display: none;
+            margin-top: 22px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        #result.show { display: block; }
+
+        .result-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background: #10253a;
+        }
+
+        .result-label {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .score {
+            margin-top: 5px;
+            font-size: 35px;
+            font-weight: 800;
+        }
+
+        .score small {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .severity {
+            display: inline-block;
+            padding: 8px 13px;
+            border-radius: 8px;
+            background: #26394c;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .severity.low { color: #72e2b2; background: #12372f; }
+        .severity.medium { color: #ffd37b; background: #45361d; }
+        .severity.high, .severity.critical { color: #ffabb7; background: #48232d; }
+
+        .result-body { padding: 20px; }
+
+        .result-item { margin-bottom: 19px; }
+        .result-item:last-child { margin-bottom: 0; }
+
+        .result-item h3 {
+            margin: 0 0 7px;
+            font-size: 13px;
+            color: var(--cyan);
+        }
+
+        .result-item p {
+            margin: 0;
+            color: #d3dfed;
+            font-size: 13px;
+            line-height: 2.2;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .disclaimer {
+            padding: 13px;
+            border-radius: 10px;
+            background: #ffffff06;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 2;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 0 0 65px;
+        }
+
+        .feature {
+            padding: 20px;
+            border: 1px solid #203750;
+            border-radius: 15px;
+            background: #0d1b2d99;
+        }
+
+        .feature-icon {
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .feature h3 {
+            margin: 0 0 8px;
+            font-size: 14px;
+        }
+
+        .feature p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 2;
+        }
+
+        footer {
+            padding: 25px 0;
+            border-top: 1px solid #ffffff0c;
+            color: var(--muted);
+            text-align: center;
+            font-size: 11px;
+            line-height: 2;
+        }
+
+        [hidden] { display: none !important; }
+
+        @media (max-width: 600px) {
+            header { min-height: 72px; }
+            .header-note { display: none; }
+            .hero { padding: 45px 0 30px; }
+            .two-columns, .features { grid-template-columns: 1fr; }
+            .features { gap: 10px; }
+            .panel { border-radius: 16px; }
+            .tabs button { font-size: 12px; }
+        }
+    </style>
 </head>
 
-<script src="script.js"></script>
-
 <body>
-
-    <!-- Background -->
-    <div class="background-grid"></div>
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
-
-
-    <!-- Navigation -->
-    <header class="navbar">
-
-        <a href="index.html" class="logo">
-            <div class="logo-mark">AI</div>
-            <div>
-                <strong>AI<span>Shield</span></strong>
-                <small>Cyber Security</small>
-            </div>
-        </a>
-
-        <nav>
-            <a href="index.html" class="active">خانه</a>
-            <a href="demo.html">تشخیص تهدید</a>
-            <a href="methods.html">روش‌ها و چالش‌ها</a>
-            <a href="solutions.html">راهکارها</a>
-            <a href="demo.html">دمو</a>
-            <a href="auth.html">ورود / ثبت‌نام</a>
-        </nav>
-
-        <div class="nav-status">
-            <i></i>
-            سیستم فعال
+    <header class="container">
+        <div class="brand">
+            <div class="brand-icon" aria-hidden="true">⬡</div>
+            <div>AI <span>SHIELD</span></div>
         </div>
-
+        <div class="header-note">تحلیل اولیه امنیت سایبری</div>
     </header>
 
-
-    <!-- Hero -->
-    <main class="hero">
-
-        <section class="hero-content">
-
+    <main>
+        <section class="hero container">
             <div class="eyebrow">
-                <span></span>
-                سمینار هوش مصنوعی و امنیت سایبری
+                <span class="dot"></span>
+                تحلیل فعالیت‌های مشکوک
             </div>
 
             <h1>
-                تشخیص هوشمند
-                <br>
-                <strong>تهدیدات سایبری</strong>
+                امنیت سایبری،<br>
+                <span>ساده‌تر از همیشه</span>
             </h1>
 
             <p>
-                چگونه هوش مصنوعی می‌تواند با تحلیل داده‌ها،
-                الگوهای غیرعادی را شناسایی کرده و به تشخیص
-                سریع‌تر تهدیدات امنیتی کمک کند؟
+                اطلاعات IP یا توضیحات فعالیت موردنظر را وارد کن و
+                نتیجه تحلیل اولیه، امتیاز ریسک و پیشنهادهای امنیتی را ببین.
+                نیازی به ساخت حساب کاربری نیست.
             </p>
-
-            <div class="hero-buttons">
-
-                <a href="demo.html" class="btn-primary">
-                    آشنایی با فرایند تشخیص
-                    <span>←</span>
-                </a>
-
-                <a href="solutions.html" class="btn-outline">
-                    راهکارهای امنیتی
-                </a>
-
-                <a href="demo.html" class="btn-outline">
-                    مشاهده دمو
-                </a>
-
-            </div>
-
-            <div class="hero-info">
-
-                <div>
-                    <strong>01</strong>
-                    <span>تشخیص</span>
-                </div>
-
-                <div>
-                    <strong>02</strong>
-                    <span>تحلیل</span>
-                </div>
-
-                <div>
-                    <strong>03</strong>
-                    <span>هشدار</span>
-                </div>
-
-            </div>
-
         </section>
 
-
-        <!-- AI Graphic -->
-        <section class="hero-graphic">
-
-            <div class="orbital orbital-1"></div>
-            <div class="orbital orbital-2"></div>
-            <div class="orbital orbital-3"></div>
-
-            <div class="core">
-
-                <div class="core-inner">
-                    <span>AI</span>
-                    <small>DETECTION</small>
+        <section class="analysis-section container" id="analysis">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2>تحلیل تهدید</h2>
+                    <p>روش تحلیل را انتخاب کن و اطلاعات موردنیاز را وارد کن.</p>
                 </div>
 
+                <div class="tabs" role="tablist" aria-label="روش تحلیل">
+                    <button class="tab active" id="ipTab" type="button"
+                            role="tab" aria-selected="true">
+                        تحلیل با IP
+                    </button>
+                    <button class="tab" id="textTab" type="button"
+                            role="tab" aria-selected="false">
+                        تحلیل متن فعالیت
+                    </button>
+                </div>
+
+                <form id="analysisForm">
+                    <div id="ipFields">
+                        <div class="two-columns">
+                            <div class="field">
+                                <label for="sourceIp">IP مبدأ</label>
+                                <input id="sourceIp" type="text"
+                                       placeholder="مثلاً 192.168.1.10"
+                                       autocomplete="off">
+                            </div>
+
+                            <div class="field">
+                                <label for="destinationIp">IP مقصد</label>
+                                <input id="destinationIp" type="text"
+                                       placeholder="مثلاً 8.8.8.8"
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="threatType">نوع فعالیت</label>
+                            <select id="threatType">
+                                <option value="Normal Traffic">ترافیک معمولی</option>
+                                <option value="Suspicious Activity">فعالیت مشکوک</option>
+                                <option value="Port Scan">اسکن پورت</option>
+                                <option value="Network Scan">اسکن شبکه</option>
+                                <option value="Malware">بدافزار</option>
+                                <option value="Unauthorized Access">دسترسی غیرمجاز</option>
+                                <option value="Ransomware">باج‌افزار</option>
+                                <option value="Zero-day">آسیب‌پذیری روز صفر</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="ipDescription">توضیحات تکمیلی (اختیاری)</label>
+                            <textarea id="ipDescription"
+                                      placeholder="اگر جزئیات بیشتری درباره فعالیت داری، اینجا بنویس."
+                                      style="min-height: 90px"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="textFields" hidden>
+                        <div class="field">
+                            <label for="activityText">توضیحات فعالیت</label>
+                            <textarea id="activityText" maxlength="5000"
+                                      placeholder="فعالیت، هشدار یا متن مشکوک را اینجا وارد کن..."></textarea>
+                            <span class="field-hint">
+                                حداقل ۱۰ و حداکثر ۵۰۰۰ نویسه. رمز عبور یا اطلاعات شخصی حساس وارد نکن.
+                            </span>
+                        </div>
+                    </div>
+
+                    <button class="analyze-btn" id="analyzeBtn" type="submit">
+                        تحلیل فعالیت
+                    </button>
+
+                    <p class="privacy-note">
+                        برای استفاده از این ابزار نیازی به ورود یا ثبت‌نام نیست.
+                    </p>
+                </form>
+
+                <div id="message" role="status" aria-live="polite"></div>
+
+                <section id="result" aria-live="polite">
+                    <div class="result-top">
+                        <div>
+                            <div class="result-label">امتیاز ریسک</div>
+                            <div class="score">
+                                <span id="riskScore">—</span>
+                                <small>از ۱۰۰</small>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="result-label" style="margin-bottom:8px">
+                                سطح ریسک
+                            </div>
+                            <span class="severity" id="severity">—</span>
+                        </div>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-item">
+                            <h3>نتیجه تحلیل</h3>
+                            <p id="analysisText"></p>
+                        </div>
+
+                        <div class="result-item">
+                            <h3>پیشنهاد امنیتی</h3>
+                            <p id="recommendationText"></p>
+                        </div>
+
+                        <div class="disclaimer">
+                            این نتیجه بر اساس قوانین و کلمات کلیدی نسخه فعلی تولید شده
+                            و به‌تنهایی اثبات‌کننده وقوع حمله یا امن بودن سیستم نیست.
+                        </div>
+                    </div>
+                </section>
             </div>
-
-
-            <!-- Floating data cards -->
-
-            <div class="data-card card-top">
-                <span class="card-icon">⌁</span>
-
-                <div>
-                    <small>تحلیل داده</small>
-                    <strong>ACTIVE</strong>
-                </div>
-            </div>
-
-
-            <div class="data-card card-right">
-
-                <div class="mini-chart">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <div>
-                    <small>Risk Score</small>
-                    <strong>87%</strong>
-                </div>
-
-            </div>
-
-
-            <div class="data-card card-bottom">
-
-                <span class="alert-icon">!</span>
-
-                <div>
-                    <small>وضعیت تهدید</small>
-                    <strong>در حال بررسی</strong>
-                </div>
-
-            </div>
-
         </section>
 
+        <section class="features container">
+            <article class="feature">
+                <div class="feature-icon" aria-hidden="true">⌘</div>
+                <h3>تحلیل با IP</h3>
+                <p>بررسی اولیه فعالیت با استفاده از آدرس IP مبدأ، مقصد و نوع فعالیت.</p>
+            </article>
+
+            <article class="feature">
+                <div class="feature-icon" aria-hidden="true">⌕</div>
+                <h3>تحلیل متن</h3>
+                <p>بررسی توضیحات و هشدارهای مشکوک برای شناسایی نشانه‌های شناخته‌شده.</p>
+            </article>
+
+            <article class="feature">
+                <div class="feature-icon" aria-hidden="true">▤</div>
+                <h3>ثبت گزارش</h3>
+                <p>گزارش تحلیل‌های موفق در پایگاه داده سرور ذخیره می‌شود و مدیر می‌تواند آن‌ها را بررسی کند.</p>
+            </article>
+        </section>
     </main>
 
-
-    <!-- Bottom section -->
-
-    <section class="concept">
-
-        <div class="concept-title">
-            <span>01 / CONCEPT</span>
-            <h2>امنیت فقط جلوگیری نیست.</h2>
+    <footer>
+        <div class="container">
+            AI Shield — ابزار کمکی تحلیل اولیه امنیت سایبری
         </div>
+    </footer>
 
-        <p>
-            تشخیص به‌موقع رخدادهای مشکوک و پاسخ سریع به آن‌ها،
-            بخش مهمی از امنیت سایبری است. سیستم‌های هوشمند
-            می‌توانند داده‌های محیط دیجیتال را بررسی کرده و
-            فعالیت‌های غیرعادی را شناسایی کنند.
-        </p>
+    <script>
+        const API_BASE = (
+            location.hostname === "localhost" ||
+            location.hostname === "127.0.0.1"
+        )
+            ? "http://127.0.0.1:8000/api"
+            : "https://ai-shield-1-y5ol.onrender.com/api";
 
-    </section>
+        const form = document.getElementById("analysisForm");
+        const ipTab = document.getElementById("ipTab");
+        const textTab = document.getElementById("textTab");
+        const ipFields = document.getElementById("ipFields");
+        const textFields = document.getElementById("textFields");
+        const analyzeBtn = document.getElementById("analyzeBtn");
+        const message = document.getElementById("message");
+        const result = document.getElementById("result");
 
+        let mode = "ip";
+        let busy = false;
 
-    <script src="script.js"></script>
+        function setMode(nextMode) {
+            if (busy) return;
 
+            mode = nextMode;
+            const isIp = mode === "ip";
+
+            ipFields.hidden = !isIp;
+            textFields.hidden = isIp;
+
+            ipTab.classList.toggle("active", isIp);
+            textTab.classList.toggle("active", !isIp);
+
+            ipTab.setAttribute("aria-selected", String(isIp));
+            textTab.setAttribute("aria-selected", String(!isIp));
+
+            document.getElementById("sourceIp").required = isIp;
+            document.getElementById("destinationIp").required = isIp;
+            document.getElementById("activityText").required = !isIp;
+
+            message.className = "";
+            message.textContent = "";
+            result.classList.remove("show");
+        }
+
+        ipTab.addEventListener("click", () => setMode("ip"));
+        textTab.addEventListener("click", () => setMode("text"));
+
+        function showError(text) {
+            message.textContent = text;
+            message.className = "show error";
+        }
+
+        function severityClass(value) {
+            const normalized = String(value || "").toLowerCase();
+
+            if (normalized === "low") return "low";
+            if (normalized === "medium") return "medium";
+            if (normalized === "high") return "high";
+            if (normalized === "critical") return "critical";
+
+            return "";
+        }
+
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            if (busy) return;
+
+            const payload = { mode };
+
+            if (mode === "ip") {
+                payload.source_ip = document.getElementById("sourceIp").value.trim();
+                payload.destination_ip = document.getElementById("destinationIp").value.trim();
+                payload.threat_type = document.getElementById("threatType").value;
+                payload.description = document.getElementById("ipDescription").value.trim();
+            } else {
+                payload.threat_type = "Text Analysis";
+                payload.description = document.getElementById("activityText").value.trim();
+            }
+
+            if (mode === "text" && payload.description.length < 10) {
+                showError("لطفاً توضیحات فعالیت را با حداقل ۱۰ نویسه وارد کن.");
+                return;
+            }
+
+            if (mode === "text" && payload.description.length > 5000) {
+                showError("متن واردشده بیش از حد طولانی است.");
+                return;
+            }
+
+            busy = true;
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = "در حال تحلیل...";
+            message.className = "show info";
+            message.textContent = "در حال اتصال به سرور و بررسی اطلاعات...";
+            result.classList.remove("show");
+
+            try {
+                const response = await fetch(API_BASE + "/alerts/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    let errorText = data.error || data.detail || data.message;
+
+                    if (Array.isArray(errorText)) {
+                        errorText = errorText.join(" ");
+                    }
+
+                    throw new Error(
+                        errorText || `سرور درخواست را نپذیرفت (خطای ${response.status}).`
+                    );
+                }
+
+                document.getElementById("riskScore").textContent =
+                    data.risk_score ?? "—";
+
+                const severityElement = document.getElementById("severity");
+                severityElement.textContent = data.severity || "نامشخص";
+                severityElement.className =
+                    "severity " + severityClass(data.severity);
+
+                document.getElementById("analysisText").textContent =
+                    data.analysis || "نتیجه‌ای ارائه نشد.";
+
+                document.getElementById("recommendationText").textContent =
+                    data.recommendation || "پیشنهادی ارائه نشد.";
+
+                message.className = "";
+                message.textContent = "";
+                result.classList.add("show");
+                result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+            } catch (error) {
+                showError(
+                    error instanceof TypeError
+                        ? "ارتباط با سرور برقرار نشد. وضعیت Render و تنظیمات CORS را بررسی کن."
+                        : error.message
+                );
+            } finally {
+                busy = false;
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = "تحلیل فعالیت";
+            }
+        });
+    </script>
 </body>
 </html>
