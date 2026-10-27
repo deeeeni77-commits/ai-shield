@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AI Shield؛ بررسی اولیه و تحلیل ریسک تهدیدات سایبری">
-    <title>AI Shield | تحلیل تهدیدات سایبری</title>
+    <meta name="description" content="AI Shield؛ هوش مصنوعی و امنیت سایبری، همراه با امکان بررسی اولیه ریسک تهدیدات">
+    <title>AI Shield | هوش مصنوعی در امنیت سایبری</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -22,9 +23,11 @@
             color: #edf6ff;
             box-sizing: border-box;
         }
+
         .analysis-section h2 { margin-top: 0; }
         .analysis-section p { color: #a9bdd2; line-height: 1.9; }
         .analysis-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin: 22px 0; }
+
         .analysis-tabs button, .analyze-button {
             border: 1px solid #1cbedb;
             background: #102b43;
@@ -34,13 +37,18 @@
             font: inherit;
             cursor: pointer;
         }
+
         .analysis-tabs button.active, .analyze-button {
             background: #00bad5;
             color: #041522;
             font-weight: 700;
         }
+
         .analysis-section label { display: block; margin: 16px 0 8px; }
-        .analysis-section input, .analysis-section textarea, .analysis-section select {
+
+        .analysis-section input,
+        .analysis-section textarea,
+        .analysis-section select {
             width: 100%;
             box-sizing: border-box;
             background: #071525;
@@ -50,15 +58,27 @@
             padding: 13px;
             font: inherit;
         }
+
         .analysis-section textarea { min-height: 140px; resize: vertical; }
         .analysis-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .analysis-fields > div { min-width: 0; }
         .analyze-button { width: 100%; margin-top: 22px; }
         .analyze-button:disabled { opacity: .6; cursor: wait; }
-        #result { display: none; margin-top: 24px; padding: 20px; background: #071525; border-radius: 14px; border: 1px solid #29435c; overflow-wrap: anywhere; }
-        #result h3 { color: #00d5ee; }
-        #result p { white-space: pre-wrap; }
-        .notice { font-size: 13px; }
+
+        #analysis-result {
+            display: none;
+            margin-top: 24px;
+            padding: 20px;
+            background: #071525;
+            border-radius: 14px;
+            border: 1px solid #29435c;
+            overflow-wrap: anywhere;
+        }
+
+        #analysis-result h3 { color: #00d5ee; }
+        #analysis-result p { white-space: pre-wrap; }
+        .analysis-notice { font-size: 13px; }
+
         @media (max-width: 600px) {
             .analysis-fields { grid-template-columns: 1fr; }
             .analysis-section { padding: 19px; }
@@ -75,51 +95,126 @@
     <header class="navbar">
         <a href="index.html" class="logo">
             <div class="logo-mark">AI</div>
-            <div><strong>AI<span>Shield</span></strong><small>Cyber Security</small></div>
+            <div>
+                <strong>AI<span>Shield</span></strong>
+                <small>Cyber Security</small>
+            </div>
         </a>
+
         <nav>
-            <a href="index.html" class="active">خانه و تحلیل</a>
+            <a href="index.html" class="active">خانه</a>
             <a href="detection.html">تشخیص تهدید</a>
             <a href="methodes.html">روش‌ها و چالش‌ها</a>
             <a href="solutions.html">راهکارها</a>
             <a href="demo.html">دمو</a>
         </nav>
-        <div class="nav-status"><i></i> سیستم فعال</div>
+
+        <div class="nav-status">
+            <i></i>
+            سیستم فعال
+        </div>
     </header>
 
     <main class="hero">
         <section class="hero-content">
-            <div class="eyebrow"><span></span> تحلیل و بررسی تهدیدات سایبری</div>
-            <h1>تحلیل هوشمند<br><strong>تهدیدات سایبری</strong></h1>
-            <p>
-                آدرس‌های IP یا متن فعالیت مشکوک را وارد کن و نتیجه
-                بررسی اولیه ریسک را مشاهده کن.
-            </p>
-            <div class="hero-buttons">
-                <a href="#threat-analysis" class="btn-primary">شروع تحلیل <span>←</span></a>
-                <a href="detection.html" class="btn-outline">آشنایی با فرایند تشخیص</a>
+            <div class="eyebrow">
+                <span></span>
+                سمینار هوش مصنوعی و امنیت سایبری
             </div>
+
+            <h1>
+                تشخیص هوشمند
+                <br>
+                <strong>تهدیدات سایبری</strong>
+            </h1>
+
+            <p>
+                چگونه هوش مصنوعی می‌تواند با تحلیل داده‌ها،
+                الگوهای غیرعادی را شناسایی کرده و به تشخیص
+                سریع‌تر تهدیدات امنیتی کمک کند؟
+            </p>
+
+            <div class="hero-buttons">
+                <a href="detection.html" class="btn-primary">
+                    آشنایی با فرایند تشخیص
+                    <span>←</span>
+                </a>
+
+                <a href="solutions.html" class="btn-outline">
+                    راهکارهای امنیتی
+                </a>
+
+                <a href="demo.html" class="btn-outline">
+                    مشاهده دمو
+                </a>
+
+                <a href="#threat-analysis" class="btn-outline">
+                    تحلیل تهدید
+                </a>
+            </div>
+
             <div class="hero-info">
-                <div><strong>01</strong><span>ورود اطلاعات</span></div>
-                <div><strong>02</strong><span>تحلیل</span></div>
-                <div><strong>03</strong><span>نمایش نتیجه</span></div>
+                <div>
+                    <strong>01</strong>
+                    <span>تشخیص</span>
+                </div>
+                <div>
+                    <strong>02</strong>
+                    <span>تحلیل</span>
+                </div>
+                <div>
+                    <strong>03</strong>
+                    <span>هشدار</span>
+                </div>
             </div>
         </section>
 
-        <section class="hero-graphic" aria-label="نمایش گرافیکی تحلیل امنیتی">
+        <section class="hero-graphic" aria-label="نمایش گرافیکی امنیت سایبری">
             <div class="orbital orbital-1"></div>
             <div class="orbital orbital-2"></div>
             <div class="orbital orbital-3"></div>
-            <div class="core"><div class="core-inner"><span>AI</span><small>DETECTION</small></div></div>
-            <div class="data-card card-top"><span class="card-icon">⌁</span><div><small>تحلیل داده</small><strong>ACTIVE</strong></div></div>
-            <div class="data-card card-right"><div class="mini-chart"><span></span><span></span><span></span><span></span><span></span></div><div><small>Risk Score</small><strong>SCAN</strong></div></div>
-            <div class="data-card card-bottom"><span class="alert-icon">!</span><div><small>وضعیت تهدید</small><strong>در حال بررسی</strong></div></div>
+
+            <div class="core">
+                <div class="core-inner">
+                    <span>AI</span>
+                    <small>DETECTION</small>
+                </div>
+            </div>
+
+            <div class="data-card card-top">
+                <span class="card-icon">⌁</span>
+                <div>
+                    <small>تحلیل داده</small>
+                    <strong>ACTIVE</strong>
+                </div>
+            </div>
+
+            <div class="data-card card-right">
+                <div class="mini-chart">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div>
+                    <small>Risk Score</small>
+                    <strong>87%</strong>
+                </div>
+            </div>
+
+            <div class="data-card card-bottom">
+                <span class="alert-icon">!</span>
+                <div>
+                    <small>وضعیت تهدید</small>
+                    <strong>در حال بررسی</strong>
+                </div>
+            </div>
         </section>
     </main>
 
     <section class="analysis-section" id="threat-analysis">
         <h2>تحلیل تهدید</h2>
-        <p>روش بررسی را انتخاب کن، اطلاعات لازم را وارد کن و دکمه تحلیل را بزن.</p>
+        <p>
+            این بخش امکان بررسی اولیه‌ی یک فعالیت مشکوک را فراهم می‌کند.
+            روش بررسی را انتخاب کن، اطلاعات را وارد کن و دکمه‌ی تحلیل را بزن.
+        </p>
 
         <div class="analysis-tabs">
             <button type="button" class="active" id="ip-tab">تحلیل با IP</button>
@@ -133,11 +228,13 @@
                         <label for="source-ip">آدرس IP مبدأ</label>
                         <input id="source-ip" type="text" placeholder="مثلاً 192.168.1.10">
                     </div>
+
                     <div>
                         <label for="destination-ip">آدرس IP مقصد</label>
                         <input id="destination-ip" type="text" placeholder="مثلاً 8.8.8.8">
                     </div>
                 </div>
+
                 <label for="threat-type">نوع فعالیت یا تهدید</label>
                 <select id="threat-type">
                     <option value="Suspicious Activity">فعالیت مشکوک</option>
@@ -147,6 +244,7 @@
                     <option value="Ransomware">باج‌افزار</option>
                     <option value="Other">سایر</option>
                 </select>
+
                 <label for="ip-description">توضیحات (اختیاری)</label>
                 <textarea id="ip-description" placeholder="اطلاعات تکمیلی درباره فعالیت..."></textarea>
             </div>
@@ -156,46 +254,60 @@
                 <textarea id="activity-text" placeholder="متن گزارش یا فعالیت را وارد کن؛ حداقل ۱۰ نویسه."></textarea>
             </div>
 
-            <button class="analyze-button" id="analyze-button" type="submit">تحلیل تهدید</button>
+            <button class="analyze-button" id="analyze-button" type="submit">
+                تحلیل تهدید
+            </button>
         </form>
 
-        <div id="result" aria-live="polite">
+        <div id="analysis-result" aria-live="polite">
             <h3>نتیجه تحلیل</h3>
             <p id="result-message"></p>
             <p id="result-details"></p>
         </div>
-        <p class="notice">توجه: نتیجه بر اساس قواعد سادهٔ تحلیل متن تولید می‌شود و به‌تنهایی اثبات‌کنندهٔ وقوع حمله نیست.</p>
+
+        <p class="analysis-notice">
+            توجه: نتیجه بر اساس قواعد ساده‌ی تحلیل تولید می‌شود و به‌تنهایی اثبات‌کننده‌ی وقوع حمله نیست.
+        </p>
     </section>
 
     <section class="concept">
-        <div class="concept-title"><span>01 / SECURITY</span><h2>امنیت با شناسایی به‌موقع آغاز می‌شود.</h2></div>
-        <p>بررسی رخدادهای مشکوک و شناخت ریسک‌ها به تصمیم‌گیری بهتر در امنیت سایبری کمک می‌کند.</p>
-    </section>
+        <div class="concept-title">
+            <span>01 / CONCEPT</span>
+            <h2>امنیت فقط جلوگیری نیست.</h2>
+        </div>
 
-    <footer style="text-align:center;padding:30px 15px;">
-        <p>AI Shield | هوش مصنوعی در امنیت سایبری</p>
-    </footer>
+        <p>
+            تشخیص به‌موقع رخدادهای مشکوک و پاسخ سریع به آن‌ها،
+            بخش مهمی از امنیت سایبری است. سیستم‌های هوشمند
+            می‌توانند داده‌های محیط دیجیتال را بررسی کرده و
+            فعالیت‌های غیرعادی را شناسایی کنند.
+        </p>
+    </section>
 
     <script>
     (() => {
         const API_BASE = "https://ai-shield-1-y5ol.onrender.com/api";
+
         const ipTab = document.getElementById("ip-tab");
         const textTab = document.getElementById("text-tab");
         const ipFields = document.getElementById("ip-fields");
         const textFields = document.getElementById("text-fields");
         const form = document.getElementById("analysis-form");
         const button = document.getElementById("analyze-button");
-        const result = document.getElementById("result");
+        const result = document.getElementById("analysis-result");
         const resultMessage = document.getElementById("result-message");
         const resultDetails = document.getElementById("result-details");
+
         let mode = "ip";
 
         function setMode(nextMode) {
             mode = nextMode;
             ipFields.hidden = mode !== "ip";
             textFields.hidden = mode !== "text";
+
             ipTab.classList.toggle("active", mode === "ip");
             textTab.classList.toggle("active", mode === "text");
+
             result.style.display = "none";
         }
 
@@ -204,7 +316,9 @@
 
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
+
             const payload = { mode };
+
             if (mode === "ip") {
                 payload.source_ip = document.getElementById("source-ip").value.trim();
                 payload.destination_ip = document.getElementById("destination-ip").value.trim();
@@ -217,6 +331,7 @@
                 }
             } else {
                 payload.description = document.getElementById("activity-text").value.trim();
+
                 if (payload.description.length < 10) {
                     showError("متن باید حداقل ۱۰ نویسه داشته باشد.");
                     return;
@@ -232,14 +347,22 @@
             try {
                 const response = await fetch(`${API_BASE}/alerts/`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify(payload)
                 });
+
                 const data = await response.json().catch(() => ({}));
 
                 if (!response.ok) {
                     const detail = data.detail || data.error || data.message;
-                    throw new Error(typeof detail === "string" ? detail : "سرور درخواست را نپذیرفت. وضعیت: " + response.status);
+
+                    throw new Error(
+                        typeof detail === "string"
+                            ? detail
+                            : "سرور درخواست را نپذیرفت. وضعیت: " + response.status
+                    );
                 }
 
                 resultMessage.textContent =
@@ -250,9 +373,12 @@
                 resultDetails.textContent =
                     `تحلیل: ${data.analysis || "تحلیل تکمیل شد."}\n` +
                     `پیشنهاد: ${data.recommendation || "اطلاعات بیشتری در پاسخ سرور وجود ندارد."}`;
+
             } catch (error) {
-                showError("تحلیل انجام نشد: " + error.message +
-                    "\nاگر سرور تازه بیدار شده، چند لحظه بعد دوباره امتحان کن.");
+                showError(
+                    "تحلیل انجام نشد: " + error.message +
+                    "\nاگر سرور تازه بیدار شده، چند لحظه بعد دوباره امتحان کن."
+                );
             } finally {
                 button.disabled = false;
                 button.textContent = "تحلیل تهدید";
@@ -266,5 +392,7 @@
         }
     })();
     </script>
+
+    <script src="script.js"></script>
 </body>
 </html>
